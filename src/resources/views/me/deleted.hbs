@@ -1,0 +1,222 @@
+<div class="container-fluid">
+    {{!-- breadcumb --}}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0 bg-light">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item "> <a href="/me">me</a></li>
+            <li class="breadcrumb-item active" aria-current="page">deleted</li>
+        </ol>
+    </nav>
+    {{!-- breadcumb --}}
+    <form action="/post/handal-from-action" method="POST" class="container mt-4 posted" id='formHandel'>
+        <nav class="justify-content-left color_blue mb-2">
+            <h3>Danh sách bài đăng Đã xóa ({{deletedCount}}) </h3>
+            <a href="/me/posted">Quay lại danh sách bài đăng</a>
+        </nav>
+        <div class="container mt-3 pl-0 pr-0">
+            <div class="row">
+                <div class="form-group d-flex col-sm-6">
+                    <select style="width: 180px;" class="custom-select" name="action" id="slHandel">
+                        <option selected value="null">Chức năng</option>
+                        <option value="restore">Khôi phục</option>
+                        <option value="destroy" class="text-danger">Xóa Vĩnh viễn *</option>
+                    </select>
+                    <button type="submit" id='btnSubmitFormHandel' disabled
+                        class="text-nowrap btn btn-primary ml-3 pt-0 pb-0">Thực
+                        hiện
+                    </button>
+                </div>
+                <div class="col-sm-6 ">
+                    <ul class="nav d-flex flex-row-reverse">
+                        <li class="nav-item ml-2">
+                            {{{softHelper 'name' soft}}}
+                            {{!-- <a class="btn border" href="#">Tên
+                                <i class="fad fa-sort text-primary"></i> </a> --}}
+                        </li>
+                        <li class="nav-item mr-2">
+                            {{{softHelper 'createdAt' soft}}}
+                            {{!-- <a class="btn border" href="#">
+                                Thời gian tạo
+                                <i class=" text-primary"></i></a> --}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive-sm">
+            <table class="table tableManager">
+                {{#if posts}}
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" name="checkAll" id="checkAll" /></th>
+                        <th>#</th>
+                        <th>Ảnh chính</th>
+                        <th>Tên sách</th>
+                        <th>Giá</th>
+                        <th>Số lượng</th>
+                        <th>Thời gian đăng</th>
+                        <th colspan="2"></th>
+                    </tr>
+                </thead>
+                {{else}}
+                <h6 style="width: 100%;" class="text-center m-4">Hiện tại bạn chưa Xóa tin
+                    đăng bán sách nào !
+                    <a href="/me/posted">
+                        Bấm vào đây để Quay lại danh sách tin Đăng bán sách</a>
+                </h6>
+                {{/if}}
+                <tbody>
+
+                    {{#each posts}}
+                    <tr>
+                        <td scope="row">
+                            <input type="checkbox" value="{{this._id}}" name="checkItems" id="checkItemt{{@index}}" />
+                        </td>
+                        <td id='id_{{this._id}}'>{{addOne 1 @index}}</td>
+                        <td><img src="{{this.images}}" alt="" style="height: 60px;" /></td>
+                        <td id='name_{{this._id}}'>{{this.name}}</td>
+                        <td>{{this.price}}</td>
+                        <td>{{this.quantity}}</td>
+                        <td>{{this.timeAgo}}</td>
+                        <td><a id='btnRestore' onclick="restore('{{this._id}}')" data-toggle="tooltip"
+                                data-placement="bottom" title="Khôi phục" class="btn border-success"><i
+                                    class="fad fa-trash-undo text-success"></i></a></td>
+                        <td><a data-whatever="{{this._id}}" data-toggle="modal" data-target="#modelDelete"
+                                data-toggle="tooltip" data-placement="bottom" title="Xóa vĩnh viễn"
+                                class="btn border-danger"><i class="far fa-times-hexagon text-danger"></i></a>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+        {{#if posts}}
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li class="page-item {{{disabled hasPrevPage }}}">
+                    <a class="page-link" href="{{linkPrev}}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </li>
+                {{#each href}}
+                <li class="page-item {{this.active}}"><a class="page-link  " href="{{this.link}}">{{this.index}}</a>
+                </li>
+                {{/each}}
+                <li class="page-item {{{disabled hasNextPage }}}">
+                    <a class="page-link" href="{{linkNext}}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        {{/if}}
+    </form>
+    <!-- Modal -->
+    <div class="modal fade" id="modelDelete" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Thông báo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <form method="POST" id='formCofirmDelete'>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-danger" id='confimDelete'>Xóa</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal handel-->
+    <div class="modal fade" id="modelDeleteHandal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Thông báo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-danger" id='confimDeleteHandel'>Xóa</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form id='formRestore' method="post"></form>
+
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+
+            var checItemts = $("[name='checkItems']")
+            var lengthItemts = $("[name='checkItems']").length
+            var slHandel = $('#slHandel')
+            var btnSubmitFormHandel = $('#btnSubmitFormHandel')
+            $('#checkAll').change(function () {
+                checItemts.prop('checked', $('#checkAll').is(':checked'))
+                setDisableBtn()
+            })
+
+            // set checked checboxx all
+            checItemts.change(function () {
+                var lengthItemtsSelected = $("[name='checkItems']:checked").length
+                $('#checkAll').prop('checked', lengthItemts == lengthItemtsSelected)
+                setDisableBtn()
+            })
+
+            slHandel.change(function () {
+                setDisableBtn()
+            })
+            function setDisableBtn() {
+                var lengthItemtsSelected = $("[name='checkItems']:checked").length
+                if (lengthItemtsSelected > 0 && slHandel.find(":selected").val() != 'null') {
+                    btnSubmitFormHandel.prop('disabled', false);
+                } else {
+                    btnSubmitFormHandel.prop('disabled', true);
+                }
+            }
+            $('#modelDelete').on('show.bs.modal', event => {
+                var postID = $(event.relatedTarget).data('whatever');
+                var modal = $(this);
+                $('#formCofirmDelete').attr('action', '/post/destroy/' + postID)
+                modal.find('.modal-body').text(' Bạn có chắc chắn xóa VĨNH VIỄN Tin Đăng: #' + $('#id_' + postID).text() + ' - ' + $('#name_' + postID).text())
+            });
+
+            $('#btnSubmitFormHandel').click('show.bs.modal', (e) => {
+                if (slHandel.val() == 'destroy') {
+                    e.preventDefault()
+                    $('#modelDeleteHandal').modal('show');
+                    var modal = $('#modelDeleteHandal');
+                    modal.find('.modal-body').text(' Bạn có chắc chắn xóa VĨNH VIỄN Tất cả Tin Đăng đã chọn').text()
+                }
+            })
+            // xac nhan submit xoa vcinh vien handal
+            $('#confimDeleteHandel').click(function () {
+                $('#formHandel').submit()
+            })
+        })
+        function restore(postID) {
+            $('#formRestore').attr('action', '/post/restore/' + postID)
+            $('#formRestore').submit()
+        }
+
+
+    </script>
+</div>

@@ -1,0 +1,112 @@
+<div id="home">
+  <div class="bg-light">
+    <div class="container-fluid">
+      <div class="h-100 align-items-center py-0">
+        <div class="fadeOut owl-carousel owl-theme">
+          <div class="item" style="overflow: hidden; height: 350px;">
+            <img src="..//images/banner-mid.jpg" alt="" />
+          </div>
+          <div class="item" style="overflow: hidden; height: 350px;">
+            <img src="..//images/banner1.jpg" alt="" />
+          </div>
+          <div class="item" style="overflow: hidden; height: 350px;">
+            <img src="..//images/banner2.jpg" alt="" />
+          </div>
+          <div class="item" style="overflow: hidden; height: 350px;">
+            <img src="..//images/banner3.jpg" alt="" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-light pt-4 pb-4 mt-4 mb-4">
+    <div class="container">
+      <div class="row mb-4">
+        <div class="col-lg-5">
+          <h2 class="font-weight-boild color_blue">Tìm sách theo khoa</h2>
+          <p class="font-italic text-muted color_blue">Chọn một khoa trong
+            trường IUH mà bạn muốn mua sách</p>
+        </div>
+      </div>
+      <div class="row text-center">
+        <!-- department item-->
+        {{#each departments}}
+        <div class="col-xl-4 col-sm-6 col-6 p-2 departmentItems">
+          <a href="/store/{{this.slug}}" class="text-dark">
+            <div class="bg-white rounded shadow-sm py-4 px-3">
+              <h5 class="mb-0">{{this.name}}</h5>
+              {{! <span class="small text-uppercase text-muted">CEO - Founder</span> }}
+            </div>
+          </a>
+        </div>
+        {{else}}
+        <h1>có lỗi gì đó ở đây</h1>
+        {{/each}}
+
+        <!-- /department item-->
+      </div>
+    </div>
+  </div>
+
+  {{! Books }}
+  <div class="bg-light pt-4 mt-4 mb-4">
+    <div class="container">
+      <div class="row mb-4">
+        <div class="col-sm-12" style=" display: flex ; justify-content: space-between;">
+          <div>
+            <h2 class="font-weight-boild color_blue">Sách vừa mới được Đăng</h2>
+            <p class="font-italic text-muted"><a href="#">Bạn muốn bán sách ?</a></p>
+          </div>
+          <div>
+            <a href="/store">Xem nhiểu hơn</a>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <!-- Book items-->
+        {{#each postsNew}}
+        <div class="col-xl-3 col-sm-4 col-6 mb-3 pl-2 pr-2 pl-1 pr-1">
+          <div class="card card_book">
+            <div class="img">
+              <img src="{{this.images}}" class="" alt="..." style="height: 100%;" />
+            </div>
+            <div class="card-body">
+              <h6 class="card-title color_name">{{{dropText this.name 10 65}}}
+              </h6>
+              <h6>Giá:
+                <span class="text-danger">{{this.price}} VND</span>
+              </h6>
+              <small class="text-mute"><i class="fad fa-clock"></i>&nbsp;&nbsp;{{this.timeAgo}}</small>
+              <br />
+              <small><i class="fad fa-user"></i>&nbsp;
+                {{this.owner.firstName}}
+                {{this.owner.lastName}}</small>
+            </div>
+          </div>
+        </div>
+        {{else}}
+        <h3>Hiện vẫn chưa có sách nào được đăng bán. Chúng sẽ sớm có ngay thôi</h3>
+        {{/each}}
+        <div style="width: 100%; display: flex; justify-content: center ; " class="mb-4">
+          <a class="text-center" href="/store">Xem nhiều hơn</a>
+        </div>
+        <!-- /Book items-->
+      </div>
+    </div>
+  </div>
+  {{! /Books }}
+
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    jQuery(document).ready(function ($) {
+      $('.fadeOut').owlCarousel({
+        items: 1,
+        animateOut: 'fadeOut', loop: true, margin: 10, autoplay: true,
+        autoplayTimeout: 5000, autoplayHoverPause: true
+      });
+    });
+  })
+</script>

@@ -1,0 +1,264 @@
+<div class="container-fluid">
+    {{!-- breadcumb --}}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0 bg-light">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">create</li>
+        </ol>
+    </nav>
+    {{!-- breadcumb --}}
+    <div class="container mt-4 pb-3">
+        <h2 class="text-center mb-3 color_blue">Tạo bài đăng</h2>
+        <hr>
+        <form action="/post/create" enctype="multipart/form-data" method="POST" id="formPost">
+
+            <div class="row ">
+                <div class="form-group col-sm-12">
+                    <label for="">Tên sách</label>
+                    <input type="text" name="name" id="name" onkeyup="checkName()" class="form-control" placeholder=""
+                        aria-describedby="helpName">
+                    <small id="helpName" class="text-danger"></small>
+                </div>
+
+            </div>
+            <div class="">
+                <div class="row mb-1 form-group ">
+                    <div class="col-sm-6">
+                        <label for="department">Chọn khoa (Nếu có)</label>
+                        <select class="custom-select " name="department" id="department">
+
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="condition">Tình trạng sách</label>
+                        <select class="custom-select " name="condition" id="condition">
+                            <option value="99">99%</option>
+                            <option value="98">98%</option>
+                            <option value="95">95%</option>
+                            <option value="90">90%</option>
+                            <option value="85">85%</option>
+                            <option value="80">80%</option>
+                            <option value="75">75%</option>
+                            <option value="70">70%</option>
+                            <option value="60">60%</option>
+                            <option value="50">50%</option>
+                        </select>
+                        <small id="helpCondition" class="text-danger"></small>
+                    </div>
+                    {{!-- <div class="col-sm-6 form-group ">
+
+                        <label for="subject">Chọn môn (Nếu có)</label>
+                        <select class="custom-select " name="subject" id="subject">
+                        </select>
+                    </div> --}}
+                </div>
+            </div>
+            <div class="row ">
+                <div class="form-group col-sm-6">
+                    <label for="">Giá sách</label>
+                    <input type="text" onkeyup="checkPrice()" name="price" id="price" class="form-control"
+                        placeholder="" aria-describedby="helpPrice">
+                    <small id="helpPrice" class="text-danger"></small>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label for="">Số lượng</label>
+                    <input type="text" name="quantity" onkeyup="checkQuantity()" id="quantity" class="form-control"
+                        placeholder="" aria-describedby="helpQuantity">
+                    <small id="helpQuantity" class="text-danger"></small>
+                </div>
+            </div>
+
+            <div class="container-fluid text-right">
+                <small id="helpImage" class="text-muted "> * Lưu ý: Ảnh không vượt quá 10MB</small>
+            </div>
+            <div class="row ">
+                <div class="form-group col-sm-4">
+                    <label for="">Ảnh 1 (Ảnh chính)</label>
+                    <input type="file" name="image1" id="image1" class="form-control" placeholder=""
+                        aria-describedby="helpImage1">
+                    <small id="helpImage1" class="text-danger"></small>
+                </div>
+                <div class="form-group col-sm-4">
+                    <label for="">Ảnh 2</label>
+                    <input type="file" name="image2" id="image2" class="form-control" placeholder=""
+                        aria-describedby="helpImage2">
+                    <small id="helpImage2" class="text-danger"></small>
+                </div>
+                <div class="form-group col-sm-4">
+                    <label for="">Ảnh 3</label>
+                    <input type="file" name="image3" id="image3" class="form-control" placeholder=""
+                        aria-describedby="helpImage3">
+                    <small id="helpImage3" class="text-danger"></small>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-12">
+                    <label for="">Mô tả sách (ghi chú)</label>
+                    <textarea class="form-control" name="description" id="description" rows="3"></textarea>
+                </div>
+            </div>
+            <div class=" container-fluid mt-2 mb-2 text-center">
+                <button type="button" class="btn btn-danger mr-3">Hủy bỏ</button>
+                <button type="button" class="btn btn-primary" id="btnSubmit">Đăng bài</button>
+            </div>
+        </form>
+    </div>
+    <script>
+        var departments
+        var subjects
+
+        (function loadDepartment() {
+            axios.get('/department')
+                .then(function (result) {
+                    departments = result.data
+                    document.getElementById('department').innerHTML = `
+                         <option disabled value="oder" selected>Chọn khoa</option>
+                            <option value="oder">Khác</option>`
+                    for (var i = 0; i < departments.length; i++) {
+                        document.getElementById('department').innerHTML +=
+                            `<option value="${departments[i]._id}">${departments[i].name}</option>`
+                    }
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                })
+        }());
+        // regex
+        function checkName() {
+            var name = $("#name").val()
+            if ($.trim(name).length == 0) {
+                $('#helpName').text('Tên sách không được rỗng')
+                return false;
+            }
+            if ($.trim(name).length > 60) {
+                $('#helpName').text('Tên sách không được vượt quá 60 ký tự')
+                return false;
+            }
+            $('#helpName').text('')
+            return true
+        }
+        function checkPrice() {
+            var price = $("#price").val()
+            if (!/^[0-9]+$/.test($.trim(price)) || $.trim(price) < 0 || $.trim(price) > 500000) {
+                $('#helpPrice').text('Giá phải là số và từ 0 - 500.000 VND ')
+                return false;
+            }
+            $('#helpPrice').text('')
+            return true
+        }
+        function checkQuantity() {
+            var quantity = $("#quantity").val()
+            if (!/^[0-9]+$/.test($.trim(quantity)) || $.trim(quantity) < 1 || $.trim(quantity) > 999) {
+                $('#helpQuantity').text('Số lượng sách là số và từ 1 - 999 ')
+                return false;
+            }
+            $('#helpQuantity').text('')
+            return true
+        }
+
+        function checkImgae() {
+            var images = $('input[type="file"]')
+            var check = true
+            const maxSize = 10485760 //  = 10MB
+            for (var i = 1; i <= images.length; i++) {
+                if (images[i - 1].value == '') {
+                    $("#helpImage" + i).text('Bạn chưa chọn ảnh')
+
+                    check = false
+                } else if (!/(bmp|gif|jpg|jpeg|png|jfif)/.test(images[i - 1].value.split('.').pop())) {
+                    $("#helpImage" + i).text('Ảnh phải có đuôi .jpg, .png, .jpeg .jfif hoặc .gif ')
+                    check = false
+
+                } else if (images[i - 1].files[0].size > maxSize) {
+                    check = false
+                    $("#helpImage" + i).text('Ảnh không thể lớn hơn 10MB')
+                } else
+                    $("#helpImage" + i).text('')
+            }
+            if (check) {
+                return true
+            }
+            return false
+        }
+        // sumit
+        document.addEventListener('DOMContentLoaded', function () {
+            $("#department").change(function () {
+                var department = $('#department').find(":selected").val();
+                filterSubject(department)
+            })
+
+            $("#subject").change(function () {
+                var subject = $('#subject').find(":selected").val();
+
+                if (subject == '60e3dea61601d52230c391cc') {
+                    setSelectedDepartment('60e3de26c94479104e56e475')
+                    return
+                }
+                const found = subjects.find(function (s) {
+                    if (s._id == subject) {
+                        return s
+                    }
+                });
+                setSelectedDepartment(found.department)
+            })
+            $("#btnSubmit").click(function (e) {
+                var check = true
+                if (!checkName()) {
+                    check = false
+                }
+                if (!checkQuantity()) {
+                    check = false
+                }
+                if (!checkPrice()) {
+                    check = false
+                }
+                if (!checkImgae()) {
+                    check = false
+                }
+                if (check) {
+                    $("#formPost").submit()
+                }
+            })
+        })
+    </script>
+</div>
+{{!-- loadSubject()
+function loadSubject() {
+axios.get('http://localhost:3001/subject')
+.then(function (result) {
+subjects = result.data
+document.getElementById('subject').innerHTML = `
+<option disabled value="oder" selected>Chọn môn</option>
+<option value="60e3dea61601d52230c391cc">Khác</option>`
+for (var i = 0; i < subjects.length; i++) { document.getElementById('subject').innerHTML +=`<option
+    value="${subjects[i]._id}">${subjects[i].name}</option>`
+    }
+    })
+    .catch(function (error) {
+    // handle error
+    console.log(error);
+    })
+    }
+
+    function filterSubject(department) {
+    if (department == undefined || department == 'all' || department == 'oder') {
+    document.getElementById('subject').innerHTML = `
+    <option disabled selected>Chọn môn</option>
+    <option value="60e3dea61601d52230c391cc">Khác</option>`
+    for (var i = 0; i < subjects.length; i++) { document.getElementById('subject').innerHTML +=`<option
+        value="${subjects[i]._id}">${subjects[i].name}</option>`
+        }
+        return
+        }
+        document.getElementById('subject').innerHTML = ''
+        for (var i = 0; i < subjects.length; i++) { if (subjects[i].department==department) {
+            document.getElementById('subject').innerHTML +=`<option value="${subjects[i]._id}">${subjects[i].name}
+            </option>`
+            }
+            }
+            }
+            function setSelectedDepartment(subject) {
+            $("select[name=department] option[value=" + subject + "]").attr('selected', 'selected')
+            } --}}

@@ -1,0 +1,351 @@
+<header>
+	<div class="container-fluid">
+		<nav class="navbar navbar-expand-lg navbar-light bg-info">
+			<div class="container"><a href="/" class="navbar-brand d-flex align-items-center text-light"> <i
+						class="fad fa-books "> </i>
+					<strong> SecondhandBooks</strong></a>
+				<button type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+					aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+					class="navbar-toggler"><span class="navbar-toggler-icon"></span></button>
+				<div id="navbarSupportedContent" class="collapse navbar-collapse">
+					{{#if userID}}
+					{{!-- da dang nhap --}}
+					<ul class="navbar-nav ml-auto">
+						<li class="nav-item ml-3 active"><a href="/" class="nav-link text-light font-italic"><i
+									class="fad fa-home"></i> Trang chủ </a></li>
+						<li class="nav-item ml-3 active"><a href="/me/posted" class="nav-link text-light font-italic"><i
+									class="fas fa-tasks"></i> Tin đã đăng </a></li>
+						<li class="nav-item ml-3 active"><a href="#" class="nav-link text-light font-italic"><i
+									class="far fa-comment-lines"></i> Chat </a></li>
+						<li class="nav-item ml-3 active"><a href="#" class="nav-link text-light font-italic"><i
+									class="far fa-bell-on"></i> Thông báo</a></li>
+						<li class="nav-item ml-3 active">
+							<a href="#" class="nav-link font-italic dropdown-toggle text-light" id="triggerId"
+								data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Khác</a>
+							<div class="dropdown open">
+								<div class="dropdown-menu" aria-labelledby="triggerId">
+									<a class="dropdown-item" href="#">Action</a>
+									<a class="dropdown-item disabled" href="#">Disabled action</a>
+								</div>
+							</div>
+						</li>
+					</ul>
+					{{else}}
+					{{!-- chua dang nhap --}}
+					<ul class="navbar-nav ml-auto">
+						<li class="nav-item ml-3 active"><a href="/" class="nav-link text-light font-italic"
+								data-toggle="modal" data-target="#loginModal "><i class="fad fa-home"></i> Trang chủ
+							</a></li>
+						<li class="nav-item ml-3 active"><a href="#" class="nav-link text-light font-italic"
+								data-toggle="modal" data-target="#loginModal "><i class="fas fa-tasks"></i> Tin đã đăng
+							</a></li>
+						<li class="nav-item ml-3 active"><a href="#" class="nav-link text-light font-italic"
+								data-toggle="modal" data-target="#loginModal "><i class="far fa-comment-lines"></i> Chat
+							</a></li>
+						<li class="nav-item ml-3 active"><a href="#" class="nav-link text-light font-italic"
+								data-toggle="modal" data-target="#loginModal "><i class="far fa-bell-on"></i> Thông
+								báo</a></li>
+						<li class="nav-item ml-3 active">
+							<a href="#" class="nav-link font-italic dropdown-toggle text-light" id="triggerId"
+								data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Khác</a>
+							<div class="dropdown open">
+								<div class="dropdown-menu" aria-labelledby="triggerId">
+									<a class="dropdown-item" href="#">Action</a>
+									<a class="dropdown-item disabled" href="#">Disabled action</a>
+								</div>
+							</div>
+						</li>
+					</ul>
+					{{/if}}
+				</div>
+			</div>
+		</nav>
+		<nav class="navbar navbar-expand-lg navbar-light bg-info pb-4">
+			<div class="container" style="display: flex; justify-content: center;">
+				{{!-- search --}}
+				<form action="store" class=" col-xl-9 col-lg-9 col-sm-9 col-md-9 mb-12 pl-12 pl-0	" id='formSearch'>
+					<div class="p-1 pl-3 bg-light rounded rounded-pill shadow-sm ">
+						<div class="input-group">
+							<div class="dropdown-menu mt-1 resultSearchComplate" style="width: 95%; "
+								aria-labelledby="search" id="resultSearch">
+								<div class="text-center">Nhập tên sách muốn mua</div>
+							</div>
+
+							<input type="search" name='q' placeholder="Nhập tên sách bạn cần tìm?" value="{{search}}"
+								onkeyup="autocompleteSearch()" id='search' autocomplete="off"
+								class="form-control border-0 bg-light pr-0" data-toggle="dropdown" aria-haspopup="true"
+								aria-expanded="false">
+
+							<div class="input-group-append">
+								<button id="button-addon1" type="submit" class="btn btn-link text-primary"><i
+										class="fa fa-search"></i></button>
+							</div>
+						</div>
+					</div>
+				</form>
+				{{!-- search --}}
+				<div id="navbarSupportedContent"
+					class="collapse navbar-collapse col-xl-3 col-lg-3 col-sm-3 col-md-3 mb-0 pl-0">
+					{{#if lastName}}
+					{{!-- da dang nhap --}}
+					<ul class="navbar-nav ml-auto">
+						<li class="nav-item mr-4 active">
+							<div class="dropdown">
+								<a class="nav-link text-white font-italic btn border dropdown-toggle" type="button"
+									id="dropDowUser" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<i class="fad fa-user"> </i>&nbsp; {{lastName}}
+								</a>
+								<form class="dropdown-menu" aria-labelledby="dropDowUser" action="/account/logout"
+									method="POST">
+
+									<a class="dropdown-item text-dark" href="/me/posted"><i class="fas fa-tasks"></i>
+										Quản lý Tin đã Đăng </a>
+									<button type="submit" class="dropdown-item text-danger" href=""><i
+											class="fad fa-sign-out"> &nbsp;</i> Đăng xuất </button>
+								</form>
+							</div>
+						</li>
+						<li class="nav-item active"><a href="/post/create"
+								class="nav-link btn btn-primary text-light font-italic"><i class="fad fa-newspaper"></i>
+								<b>ĐĂNG TIN</b></a></li>
+					</ul>
+					{{else}}
+					{{!-- chua dang nhap --}}
+					<ul class="navbar-nav ml-auto">
+						<li class="nav-item mr-4 active"><a href="#" class="nav-link text-white font-italic"
+								data-toggle="modal" data-target="#loginModal "><i class="fad fa-user"></i>&nbsp; <u>Đăng
+									nhập</u> </a></li>
+						<li class="nav-item active"><a href="#" data-toggle="modal" data-target="#loginModal "
+								class="nav-link btn btn-primary text-light font-italic"><i class="fad fa-newspaper"></i>
+								<b>ĐĂNG TIN</b></a></li>
+					</ul>
+					{{/if}}
+				</div>
+			</div>
+	</div>
+	</nav>
+	</div>
+	{{!-- login fb plush --}}
+	<script>
+		window.fbAsyncInit = function () {
+			FB.init({
+				appId: '254008886189195',
+				xfbml: true,
+				version: 'v11.0'
+			});
+			FB.AppEvents.logPageView();
+		};
+
+		(function (d, s, id) {
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) { return; }
+			js = d.createElement(s); js.id = id;
+			js.src = "https://connect.facebook.net/en_US/sdk.js";
+			fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+	</script>
+	{{!-- login fb plush --}}
+	<!-- Modal -->
+	<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header  border-bottom-0">
+					<button type="button" class="close " data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div id="formLogin">
+					<div class="modal-body pl-4 pr-4	">
+						<div class="container-fluid">
+							<div>
+								<h4 class="text-center text-info">Đăng nhập</h4>
+								<br>
+							</div>
+						</div>
+						<div class="alert alert-danger" role="alert" id="alertLogin" style="display: none;">
+
+						</div>
+						<form>
+							<div class="form-group">
+								<input type="email" name="email" class="form-control" id="emailLogin"
+									placeholder="Nhập địa chỉ Email">
+							</div>
+							<div class="form-group">
+								<input type="password" name="password" class="form-control" id="passLogin"
+									placeholder="Nhập mật khẩu">
+							</div>
+							<button type="button" class="btn btn-info btn-block btn-round" onclick="login()">Dăng
+								nhập</button>
+						</form>
+					</div>
+					{{!-- login FB --}}
+					<div class="container-fluid pb-3 text-center">
+
+						<a href="/account/fb">
+							Login with FB
+						</a>
+						<script>
+							function checkLoginState() {
+								FB.getLoginStatus(function (response) {
+									statusChangeCallback(response);
+								});
+							}
+						</script>
+					</div>
+					{{!-- /login FB --}}
+				</div>
+				<div id=" formSignin" style="display: none;">
+					<div class="modal-body pl-4 pr-4	">
+						<div class="container-fluid">
+							<div>
+								<h4 class="text-center text-info">Đăng kí</h4>
+								<br>
+							</div>
+						</div>
+						<div class="alert alert-danger" role="alert" id="alertSignin" style="display: none;">
+
+						</div>
+						<form action="/account/resgister" method="POST">
+							<div class="form-group">
+								<input type="email" class="form-control" name="email" id="emailSignin"
+									placeholder="Nhập địa chỉ Email">
+								<small class="text-danger" style="display: none;">*</small>
+							</div>
+							<div class="row">
+								<div class="form-group col-sm-6">
+									<input type="text" class="form-control" name="firstName" id="firstName"
+										placeholder="Nhập họ">
+									<small class="text-danger" style="display: none;">*</small>
+								</div>
+								<div class="form-group col-sm-6">
+									<input type="email" class="form-control" name="lastName" id="lastName"
+										placeholder="Nhập tên">
+									<small class="text-danger" style="display: none;">*</small>
+								</div>
+							</div>
+							<div class="form-group">
+								<input type="password" class="form-control" name="password" id="passSignin"
+									placeholder="Nhập mật khẩu">
+								<small class="text-danger" style="display: none;">*</small>
+							</div>
+
+							<button type="button" class="btn btn-info btn-block btn-round" onclick="signin()">Đăng
+								kí</button>
+						</form>
+					</div>
+					<div class="modal-footer d-flex justify-content-center">
+						<div> <a onclick="onFormLogin()" class="text-info"> Quay lại Đăng nhập</a>.
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<script>
+
+
+		function autocompleteSearch() {
+			var search = $('#search').val()
+			axios.get('/store/search-complete?q=' + search)
+				.then(function (response) {
+					var data = response.data
+					index = 0
+					var result = ''
+					while (index < data.length) {
+						result += `
+							<a class="dropdown-item resultSearchItems " href="/store?q=${data[index]._id}">${data[index]._id}</a>
+						`
+						index++
+					}
+					if (result) {
+						$('#resultSearch').html(result)
+					} else {
+						$('#resultSearch').html(`<div class="text-center"><p>Không tìm thấy từ khóa nào khớp</p></div> `)
+					}
+				})
+				.catch(function (error) {
+					console.log(error)
+				})
+		}
+
+		function onFormSignin() {
+			document.getElementById('formSignin').style.display = 'block'
+			document.getElementById('formLogin').style.display = 'none'
+		}
+		function onFormLogin() {
+			document.getElementById('formSignin').style.display = 'none'
+			document.getElementById('formLogin').style.display = 'block'
+		}
+		// tat autocomplate
+		$(document).click(function (e) {
+			if ($(e.target).is('#formSearch'))
+				return;
+			alert(e.target)
+			$('#resultSearch').css('display', 'none')
+		});
+		document.addEventListener('DOMContentLoaded', function () {
+
+			$('#exampleModal').on('show.bs.modal', event => {
+				var button = $(event.relatedTarget);
+				var modal = $(this);
+				// Use above variables to manipulate the DOM
+
+			});
+			// hien autocomlate
+			$('#search').click(function () {
+				autocompleteSearch()
+				$('#resultSearch').css('display', 'block')
+			})
+			// on hover active 
+		})
+
+
+		function login() {
+			var email = document.getElementById('emailLogin').value
+			var password = document.getElementById('passLogin').value
+			axios.post('/account/login', {
+				username: email,
+				password
+			})
+				.then(function (res) {
+					if (res.data.status) {
+						// dang nhap thanh cong
+						location.reload();
+					} else {
+						document.getElementById('alertLogin').style.display = 'block'
+						document.getElementById('alertLogin').innerHTML = res.data.error
+					}
+				})
+				.catch(function (error) {
+					console.log(error);
+				});
+		}
+		function signin() {
+			var email = document.getElementById('emailSignin').value
+			var password = document.getElementById('passSignin').value
+			var lastName = document.getElementById('lastName').value
+			var firstName = document.getElementById('firstName').value
+			axios.post('/account/resgister', {
+				email,
+				password,
+				lastName,
+				firstName
+			})
+				.then(function (res) {
+					if (res.data.status) {
+						// dang nhap thanh cong
+						location.reload();
+					} else {
+						document.getElementById('alertSignin').style.display = 'block'
+						document.getElementById('alertSignin').innerHTML = res.data.error
+					}
+				})
+				.catch(function (error) {
+					console.log(error);
+				});
+		}
+
+
+	</script>
+</header>

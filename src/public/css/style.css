@@ -1,0 +1,47 @@
+#home .departmentItems:hover a {
+  text-decoration: none; }
+
+#home .departmentItems:hover h5 {
+  color: #17a2b8; }
+
+#posted .tableManager td {
+  align-items: center; }
+
+#store .department-select {
+  display: none; }
+
+@media (max-width: 992px) {
+  #store .main .filter {
+    display: none; }
+  #store .main .department-select {
+    display: block; } }
+
+.resultSearchComplate a {
+  font-size: 14px; }
+
+.color_blue {
+  color: #225486; }
+
+.color_name {
+  color: #01274e; }
+
+.color_name:hover {
+  color: #17a2b8; }
+
+.card_book {
+  box-shadow: 1px 1px 1px #a2c2c8;
+  border-radius: 20%; }
+
+.card_book .img {
+  overflow: hidden;
+  height: 235px;
+  background-color: whitesmoke;
+  display: flex;
+  justify-content: center; }
+
+.card_book:hover {
+  border: 1px solid #17a2b8; }
+
+.card_book .img:hover img {
+  transition: 500ms;
+  transform: scale(1.1); }

@@ -1,0 +1,155 @@
+<div class="container-fluid" id='store'>
+    {{!-- breadcumb --}}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Store</li>
+            {{#if search}}
+            <li class=" ml-3 text-muted" aria-current="page"> kết quả tìm kiếm cho: {{search}}</li>
+            {{/if}}
+        </ol>
+    </nav>
+    {{!-- breadcumb --}}
+    {{! Books }}
+    <div class="row main">
+        <div class="col-lg-2 col-0 filter">
+            <div class="list-group">
+                <a href="/store"
+                    class="list-group-item list-group-item-action flex-column align-items-start  {{activeDepartment}}">
+                    <div class="d-flex w-100 justify-content-between ">
+                        <p class="mb-1 mt-1">Tất cả</p>
+                    </div>
+
+                </a>
+                {{#each departments }}
+                <a href="/store/{{this.slug}}" id='lg_{{this.slug}}'
+                    class="list-group-item list-group-item-action flex-column align-items-start ">
+                    <div class="d-flex w-100 justify-content-between">
+                        <p class="mb-1 mt-1">{{this.name}}</p>
+                    </div>
+
+                </a>
+                {{/each}}
+
+            </div>
+        </div>
+        <div class="bg-light mb-4 col-lg-10 col-12">
+            <hr class="mt-0">
+            <div class="container">
+                <div class="row mb-4">
+                    <div class="col-sm-12" style=" display: flex ; justify-content: space-between;">
+                        <div>
+
+                        </div>
+                        <div>
+                            <ul class="nav d-flex flex-row-reverse">
+                                <li class="nav-item mr-2">
+                                    {{{softHelper 'name' soft}}}
+                                    {{!-- <a class="btn border" href="#">Tên
+                                        <i class="fad fa-sort text-primary"></i> </a> --}}
+                                </li>
+                                <li class="nav-item mr-2">
+                                    {{{softHelper 'price' soft}}}
+                                    {{!-- <a class="btn border" href="#">
+                                        Thời gian tạo
+                                        <i class=" text-primary"></i></a> --}}
+                                </li>
+                                <li class="nav-item mr-2">
+                                    {{{softHelper 'createdAt' soft}}}
+                                    {{!-- <a class="btn border" href="#">
+                                        Thời gian tạo
+                                        <i class=" text-primary"></i></a> --}}
+                                </li>
+                                <li class="nav-item mr-2 department-select">
+                                    <select class="form-control" name="" id='select_deparment'>
+                                        <option disabled>Lọc theo khoa</option>
+                                        <option value="">Tất cả</option>
+                                        {{#each departments }}
+                                        <option value="{{this.slug}}">{{this.name}}</option>
+                                        {{/each}}
+                                    </select>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Book items-->
+                    {{#each posts}}
+                    <div class="col-xl-3 .col-lg-3 .col-md-3 col-sm-4 col-6 mb-3  pl-2 pr-2">
+                        <div class="card card_book ">
+                            <div class="img">
+                                <img src="{{this.images}}" class="" alt="..." />
+                            </div>
+                            <div class="card-body">
+                                <h6 class="card-title color_name">{{{dropText this.name 10 65}}}
+                                </h6>
+                                <h6>Giá:
+                                    <span class="text-danger">{{this.price}} VND</span>
+                                </h6>
+                                <small class="text-mute"><i
+                                        class="fad fa-clock"></i>&nbsp;&nbsp;{{this.timeAgo}}</small>
+                                <br />
+                                <small><i class="fad fa-user"></i>&nbsp;
+                                    {{this.owner.firstName}}
+                                    {{this.owner.lastName}}</small>
+                            </div>
+                        </div>
+                    </div>
+                    {{else}}
+                    <h3>Hiện vẫn chưa có sách nào được đăng bán. Chúng sẽ sớm có ngay thôi</h3>
+                    {{/each}}
+                    {{!-- <div style="width: 100%; display: flex; justify-content: center ; " class="mb-4">
+                        <a class="text-center" href="/store">Xem nhiều hơn</a>
+                    </div> --}}
+                    <!-- /Book items-->
+                </div>
+            </div>
+            {{#if posts}}
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item {{{disabled hasPrevPage }}}">
+                        <a class="page-link" href="{{linkPrev}}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
+                    {{#each href}}
+                    <li class="page-item {{this.active}}"><a class="page-link  " href="{{this.link}}">{{this.index}}</a>
+                    </li>
+                    {{/each}}
+                    <li class="page-item {{{disabled hasNextPage }}}">
+                        <a class="page-link" href="{{linkNext}}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            {{/if}}
+        </div>
+        {{! /Books }}
+
+    </div>
+
+</div>
+<div id='departmentActive' style="display: none;">{{departmentActive}}</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        (function () {
+            var slug = $('#departmentActive').text()
+            if (slug) {
+                $('option[value=' + slug + ']').attr('selected', 'selected');
+                $('#lg_' + slug).addClass('bg-info text-white');
+
+            }
+        }());
+        $('#select_deparment').change(function (e) {
+
+            location.href = '/store/' + $('#select_deparment').val()
+        })
+    })
+
+</script>
