@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 async function connect() {
+    const uri = process.env.db || "mongodb+srv://nguyenthanhson162001:Son162001@cluster1.rjvkr.mongodb.net/secondhand_books_store?retryWrites=true&w=majority";
     try {
-        const uri = process.env.db || "mongodb+srv://nguyenthanhson162001:Son162001@cluster1.rjvkr.mongodb.net/secondhand_books_store?retryWrites=true&w=majority";
         await mongoose.connect(uri, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
