@@ -10,11 +10,17 @@ class LoginController {
     }
     // [POST] /Login 
     login(req, res, next) {
+        if (req.user) {
+            res.json({
+                status: true
+            })
+        } else {
+            res.json({
+                status: false
+                , error: "Tài khoảng hoặc mật khẩu không đúng"
+            })
+        }
 
-        res.json({
-            status: false
-            , error: "ERROR"
-        })
         // passport.authenticate('local', function (err, user, done) {
         //     if (err) {
         //         res.json({
@@ -68,7 +74,10 @@ class LoginController {
         // }
 
     }
-
+    // [POST] /register
+    showResgister(req, res, next) {
+        res.render('account/register')
+    }
     // [POST] /signin 
     resgister(req, res, next) {
         if (!req.body.email || !req.body.password || !req.body.lastName || !req.body.firstName) {

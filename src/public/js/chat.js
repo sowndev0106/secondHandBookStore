@@ -17,9 +17,12 @@ function loadMessageWithPage(page) {
 
     axios.get('/me/getMessages/' + userReceive + '?soft=createdAt&type=desc&page=' + page)
         .then((result) => {
-            var messages = result.data.chats.docs
-            userID = result.data.userID
+            if (result.data == undefined) {
+                throw 'no have room'
+            }
+            let messages = result.data.chats.docs
 
+            userID = result.data.userID
             // userReceive == null => dafault first room (user)
             if (window.location.href.split('/')[window.location.href.split('/').length - 1] == 'chat' && userReceive != result.data.userReceive) {
                 userReceive = result.data.userReceive
@@ -29,12 +32,23 @@ function loadMessageWithPage(page) {
                 socket.emit('location', window.location.href)
             }
             var rooms = result.data.rooms
+
             showRooms(rooms)
-            showMessages(messages)
+            if (messages) {
+                showMessages(messages)
+            }
             chatBotom()
             // delete notification
             restartNotification()
 
+        })
+        .catch((e) => {
+            $('#chat').html(`
+            <div class="text-center">
+            <h3>Hiện tại bạn chưa có tin nhắn nào</h3>
+            <a href="/">Nhấn vào đây để quay lại</a>
+        </div>
+            `)
         })
 
 }
@@ -81,6 +95,8 @@ function showMessages(messages) {
 
 }
 function showRooms(rooms) {
+    if (rooms.length == 0)
+        return
     var listRoom = document.getElementById('listRoom')
     listRoom.innerHTML = ''
     rooms.forEach((room) => {
@@ -88,20 +104,24 @@ function showRooms(rooms) {
         listUserInRoom[room.member[0]._id] = false
         let avatar = room.member[0].avatar == undefined ? avatarDefault : room.member[0].avatar
         let active = room.member[0]._id == userReceive ? 'active' : ''
-        let miss = room.miss
+        let miss = room.miss || 0
         let checkMiss
         if (miss == 0) {
             checkMiss = 'style="display: none"'
         }
-        let lastMassage = room.chatEnd.message
-        if (lastMassage.length > 27)
-            lastMassage = lastMassage.substr(0, 25) + ' ...'
-        if (room.chatEnd.userSend === userReceive) {
-            lastMassage = `<p id ='chat_end_${room.member[0]._id}'>${room.member[0].lastName}: ${lastMassage}  </p>`
+        let lastMassage
+        if (room.chatEnd) {
+            lastMassage = room.chatEnd.message
+            if (lastMassage.length > 27)
+                lastMassage = lastMassage.substr(0, 25) + ' ...'
+            if (room.chatEnd.userSend === userReceive) {
+                lastMassage = `<p id ='chat_end_${room.member[0]._id}'>${room.member[0].lastName}: ${lastMassage}  </p>`
+            } else {
+                lastMassage = `<p id ='chat_end_${room.member[0]._id}'>Bạn: ${lastMassage}  </p>`
+            }
         } else {
-            lastMassage = `<p id ='chat_end_${room.member[0]._id}'>Bạn: ${lastMassage}  </p>`
+            lastMassage = ''
         }
-
         listRoom.innerHTML += `
                             <li class="${active}">
                                 <div class="d-flex bd-highlight" onclick = 'changeRoom("${room.member[0]._id}")'>

@@ -78,6 +78,19 @@ class Mecontroller {
       });
   }
   chat(req, res, next) {
+    var user1 = req.user._id
+    var user2 = req.params.userID
+    if (user2) {
+      // check have room // find or create
+      Room.findOne({ member: { $all: [user1, user2] } }, function (err, data) {
+        if (!data) {
+          var room = new Room()
+          room.member.push(user1)
+          room.member.push(user2)
+          room.save()
+        }
+      })
+    }
     res.render('me/chat')
   }
   // [GET] /me/getMessages
@@ -94,8 +107,12 @@ class Mecontroller {
     // var room = new Room()
     // room.member = [user1, user2]
 
-    Room.find({ member: user1 }).populate({ path: 'member', match: { _id: { $ne: user1 } } }).populate('chatEnd')
+    Room.find({ member: { $in: [user1] } }).populate({ path: 'member', match: { _id: { $ne: user1 } } }).populate('chatEnd')
       .then(async function (rooms) {
+        if (rooms.length == 0) {
+          throw 'no have room';
+
+        }
         // check don't chat with myself
         let query = {}
         if (user2 == undefined || user1 == user2) {
@@ -122,7 +139,6 @@ class Mecontroller {
         return Promise.all([rooms, Chat.paginate({ room: room._id }, option)])
       })
       .then(([rooms, chats]) => {
-
         res.json({
           rooms: rooms,
           chats: chats,

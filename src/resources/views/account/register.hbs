@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid" style="display: none;">
     <!-- Modal -->
     <div class="container mt-4">
         <h4 class="text-center  mb-4">Đăng nhập</h4>
@@ -13,52 +13,22 @@
             <button type="submit" class="btn btn-info btn-block btn-round">Dăng
                 nhập</button>
         </form>
-        {{!-- <div class="container-fluid pb-3 text-center">
+        <div class="container-fluid pb-3 text-center">
             <a href="/account/fakebook">
                 Login with FB
             </a>
         </div>
         <div class="container-fluid pb-3 text-center">
             <a href="/account/google">Sign In with Google</a>
-        </div> --}}
-        <br>
-        <div class="container-fluid mb-3" style="display: flex;justify-content: center;">
-            <div>
-                <div class="google-btn">
-                    <div class="google-icon-wrapper">
-                        <img style="position: absolute; margin-top: 3px; margin-left: 3px;width: 34px;height: 34px;"
-                            src="/images/Facebook-f_Logo-Blue-Logo.wine.svg" />
-                        {{!-- <i class="fab fa-facebook-square" style="font-size: 39px;"></i> --}}
-                    </div>
-                    <p class="btn-text"><b><a href="/account/fakebook" class="text-white">Sign in with
-                                fakebook</a></b></p>
-                </div>
-            </div>
         </div>
-        <div class="container-fluid mb-3 " style="display: flex;justify-content: center;">
-            <div>
-                <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
-                <div class="google-btn bg-danger">
-                    <div class="google-icon-wrapper">
-                        <img class="google-icon"
-                            src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" />
-                    </div>
-                    <p class="btn-text"><b><a href="/account/google" class="text-white mr-2	">Sign in with
-                                google</a></b>
-                    </p>
-                </div>
-            </div>
-        </div>
-
     </div>
 </div>
-<br> <br> <br> <br>
 {{!-- login FB --}}
 
 
 
 
-<div id=" formSignin" style="display: none;">
+<div class="container p-4" id=" formSignin">
     <div class="modal-body pl-4 pr-4	">
         <div class="container-fluid">
             <div>
@@ -94,7 +64,7 @@
         </form>
     </div>
     <div class="modal-footer d-flex justify-content-center">
-        <div> <a onclick="onFormLogin()" class="text-info"> Quay lại Đăng nhập</a>.
+        <div> <a onclick="onFormLogin()" href="/account/login" class="text-info"> Quay lại Đăng nhập</a>.
         </div>
     </div>
 </div>

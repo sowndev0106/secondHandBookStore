@@ -363,8 +363,6 @@
 			})
 			// on hover active 
 		})
-
-
 		function login() {
 			var email = document.getElementById('emailLogin').value
 			var password = document.getElementById('passLogin').value
@@ -373,6 +371,7 @@
 				password
 			})
 				.then(function (res) {
+					console.log(res)
 					if (res.data.status) {
 						// dang nhap thanh cong
 						location.reload();
@@ -382,7 +381,8 @@
 					}
 				})
 				.catch(function (error) {
-					console.log(error);
+					document.getElementById('alertLogin').style.display = 'block'
+					document.getElementById('alertLogin').innerHTML = 'tài khoảng mật khẩu không đúng'
 				});
 		}
 		function signin() {

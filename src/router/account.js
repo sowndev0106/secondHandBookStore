@@ -7,7 +7,8 @@ const accountMiddlewares = require('..//app/middlewarses/AccountMiddlewarses')
 
 
 router.get('/login', accountMiddlewares.checkNoLogged, loginController.loginPage);
-router.post('/login', passport.authenticate('local', { successRedirect: '/', failureRedirect: '/account/login' }));
+router.get('/signup', accountMiddlewares.checkNoLogged, loginController.showResgister);
+router.post('/login', passport.authenticate('local'), loginController.login);
 router.get('/fakebook', passport.authenticate('facebook', { scope: ['email'] }))
 router.use('/fakebook/callback', passport.authenticate('facebook', { failureRedirect: '/account/login', successRedirect: '/' }))
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
