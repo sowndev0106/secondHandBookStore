@@ -102,5 +102,5 @@ app.set('views', path.join(__dirname, 'resources/views'));
 
 router(app)
 
-// sslServer.listen(port, () => console.log(`Secure server on https://localhost:${port}`))
-app.listen(port, () => console.log("server start succeeded"))
+sslServer.listen(port, () => console.log(`Secure server on https://localhost:${port}`))
+// app.listen(port, () => console.log("server start succeeded"))
