@@ -4,34 +4,40 @@ const passport = require('passport')
 const initializePassport = require('..//..//config/passport/passport-config')
 
 class LoginController {
+    // [GET] /Login 
+    loginPage(req, res, next) {
+        res.render('account/login')
+    }
     // [POST] /Login 
     login(req, res, next) {
-        passport.authenticate('local', function (err, user, done) {
-            if (err) {
-                res.json({
-                    status: false
-                    , error: "ERROR"
-                })
-                return
-            }
-            // User does not exist
-            if (!user) {
-                res.json({
-                    status: false
-                    , error: "Email hoặc mật khẩu không đúng"
-                })
-                return
-            }
-            res.cookie('userID', user._id)
-            res.cookie('lastName', user.lastName)
-            res.json({
-                status: true
-            })
 
-        })(req, res, next);
+        res.json({
+            status: false
+            , error: "ERROR"
+        })
+        // passport.authenticate('local', function (err, user, done) {
+        //     if (err) {
+        //         res.json({
+        //             status: false
+        //             , error: "ERROR"
+        //         })
+        //         return done(null, false, { massage: "No user with that email" })
+        //     }
+        //     // User does not exist
+        //     if (!user) {
+        //         res.json({
+        //             status: false
+        //             , error: "Email hoặc mật khẩu không đúng"
+        //         })
+        //         return done(null, false, { massage: "No user with that email" })
+        //     }
+        //     res.cookie('userID', user._id)
+        //     res.cookie('lastName', user.lastName)
+        //     res.json({
+        //         status: true
+        //     })
 
-
-
+        // })(req, res, next);
 
         // if (!req.body.email || !req.body.password) {
         //     res.json({
@@ -62,32 +68,7 @@ class LoginController {
         // }
 
     }
-    // [POST] /fb/cb
-    fb(req, res, next) {
-        passport.authenticate('fakebook', function (err, user, done) {
-            if (err) {
-                res.json({
-                    status: false
-                    , error: "ERROR"
-                })
-                return
-            }
-            // User does not exist
-            if (!user) {
-                res.json({
-                    status: false
-                    , error: "Email hoặc mật khẩu không đúng"
-                })
-                return
-            }
-            res.cookie('userID', user._id)
-            res.cookie('lastName', user.lastName)
-            res.json({
-                status: true
-            })
 
-        })(req, res, next);
-    }
     // [POST] /signin 
     resgister(req, res, next) {
         if (!req.body.email || !req.body.password || !req.body.lastName || !req.body.firstName) {
@@ -164,11 +145,16 @@ class LoginController {
     }
     //[POST}] /account/logout
     logout(req, res, next) {
-        res.clearCookie('lastName', { path: '/' })
-        res.clearCookie('userID', { path: '/' })
+        req.logout();
         res.redirect('/')
     }
-
-
+    // [GET] /account/fakebook/callback
+    fakebook(req, res, next) {
+        return res.redirect('/');
+    }
+    // [GET] /account/google/callback
+    google(req, res, next) {
+        res.redirect('back')
+    }
 }
 module.exports = new LoginController

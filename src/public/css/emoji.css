@@ -1,0 +1,136 @@
+
+/****** general ******/
+/* 
+#emoji {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-box-sizing: padding-box;
+  -moz-box-sizing: padding-box;
+  box-sizing: padding-box
+} */
+
+/* body { width: 100%; background-color:#f7f7f7; } */
+
+ #emoji a { text-decoration: none }
+
+ #emoji ul, li {
+  list-style: none;
+  padding: 0
+}
+
+ /* #emoji button, #emoji input[type=text] { outline: none } */
+
+ #emoji .clear { clear: both }
+ #emoji hr {
+ 
+}
+/* 
+#emoji .container {
+  max-width: 1200px;
+  margin: 150px auto;
+  padding: 0 !important;
+  position: relative;
+} */
+
+ #emoji [contenteditable=true]:empty:before {
+  content: attr(placeholder);
+  display: block; /* For Firefox */
+}
+
+/* */
+
+ /* #emoji .emotion { margin: 150px auto }
+
+#emoji div[contenteditable=true] {
+  border: 1px dashed #AAA;
+  width: 290px;
+  padding: 5px;
+}
+
+#emoji pre {
+  background: #EEE;
+  padding: 5px;
+  width: 290px;
+} */
+
+ #emoji .emotion {
+  /* position: relative;
+  display: flex */
+}
+
+ #emoji .emotion-Icon {
+  /* position: relative;
+  right: 25px;
+  top: 15px; */
+  /* cursor: pointer; */
+    border-radius: 0px 5px 5px 0px;
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    border: 0 !important;
+    padding-right: 15px;
+    color: white !important;
+    cursor: pointer;
+
+}
+ #emoji .emotion-Icon i {
+      line-height: 60px;
+}
+
+#emoji .ShowImotion { display: flex !important; }
+
+#emoji .emotion-area {
+  border-radius: 15px;
+  padding: 15px;
+  position: absolute;
+  background-color: rgb(209, 230, 240);
+  box-shadow: 1px 1px 1px 1px #333;
+  bottom: 115%;
+  display: none;
+  right: 0;
+  width: 300px;
+  flex-wrap: wrap;
+  overflow-y: scroll;
+  height: 150px;
+}
+
+ #emoji .top {
+  top: 130%;
+  bottom: auto
+}
+
+
+ /* #emoji .emotion-area img {
+  margin: 4px;
+  cursor: pointer;
+} */
+
+/****** end general ******/
+
+
+#emoji #canvas {
+  border: 1px solid red;
+  margin: auto
+}
+
+
+/**** start madia Query ****/
+
+@media only screen and (max-width : 1200px) {
+}
+
+    /* Medium Devices, Desktops */
+@media only screen and (max-width : 992px) {
+}
+
+    /* Small Devices, Tablets */
+ @media only screen and (max-width : 768px) {
+}
+
+    /* Extra Small Devices, Phones */ 
+@media only screen and (max-width : 480px) {
+}
+
+/* Custom, iPhone Retina */ 
+
+@media only screen and (max-width : 320px) {
+}

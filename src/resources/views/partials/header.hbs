@@ -1,4 +1,4 @@
-<header>
+<header class="bg-info">
 	<div class="container-fluid">
 		<nav class="navbar navbar-expand-lg navbar-light bg-info">
 			<div class="container"><a href="/" class="navbar-brand d-flex align-items-center text-light"> <i
@@ -15,10 +15,74 @@
 									class="fad fa-home"></i> Trang chủ </a></li>
 						<li class="nav-item ml-3 active"><a href="/me/posted" class="nav-link text-light font-italic"><i
 									class="fas fa-tasks"></i> Tin đã đăng </a></li>
-						<li class="nav-item ml-3 active"><a href="#" class="nav-link text-light font-italic"><i
+						<li class="nav-item ml-3 active"><a href="/me/chat" class="nav-link text-light font-italic"><i
 									class="far fa-comment-lines"></i> Chat </a></li>
-						<li class="nav-item ml-3 active"><a href="#" class="nav-link text-light font-italic"><i
-									class="far fa-bell-on"></i> Thông báo</a></li>
+						<li class="nav-item ml-3 active">
+
+							{{!-- <div class="btn-group">
+								<a href="#" class=" nav-link text-light font-italic" data-toggle="dropdown"
+									aria-haspopup="true" aria-expanded="false"></a>
+								<div class="dropdown-menu" id='dropdown-notification'>
+									<a class="dropdown-item">
+										<div class="d-flex bd-highlight">
+											<div class="img_cont">
+												<img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg"
+													class="rounded-circle user_img" style="height: 35px; width: 35px;">
+											</div>
+											<div class="user_info">
+												<span>Khalid</span>
+												<p>Kalid is online</p>
+											</div>
+										</div>
+									</a>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item">
+										<div class="d-flex bd-highlight">
+											<div class="img_cont">
+												<img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg"
+													class="rounded-circle user_img" style="height: 35px; width: 35px;">
+											</div>
+											<div class="user_info">
+												<span>Khalid</span>
+												<p>Kalid is online</p>
+											</div>
+										</div>
+									</a>
+								</div>
+							</div> --}}
+
+							<a href="#" class="nav-link font-italic text-light " id="notification"
+								data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i
+									class="far fa-bell-on iconNotification"></i> Thông
+								báo <i class="sumNotification"></i> </a>
+							<div class="dropdown open ">
+								<div class="dropdown-menu overflow-auto pl-2 pr-2 bg-white"
+									aria-labelledby="notification" id='dropdown-notification'>
+									<div class="  dropdown-item noNotification">
+										<div class='text-center'>
+											<p class='m-2'>Bạn chưa có thông báo nào </p>
+										</div>
+									</div>
+									{{!-- <a class="dropdown-item">
+										<div class="d-flex bd-highlight">
+											<div class="img">
+												<img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg"
+													class="rounded-circle user_img">
+											</div>
+											<div class="info">
+												<div class="d-flex justify-content-between">
+													<b>Khalid</b>
+													<i class="bg-danger text-white    pr-1 pl-1 pb-0">11</i>
+												</div>
+												<span class='message'>Kalid is onlineKalid is onlineKalid ...</span>
+											</div>
+										</div>
+									</a>
+									<hr> --}}
+
+								</div>
+							</div>
+						</li>
 						<li class="nav-item ml-3 active">
 							<a href="#" class="nav-link font-italic dropdown-toggle text-light" id="triggerId"
 								data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Khác</a>
@@ -63,7 +127,7 @@
 		<nav class="navbar navbar-expand-lg navbar-light bg-info pb-4">
 			<div class="container" style="display: flex; justify-content: center;">
 				{{!-- search --}}
-				<form action="store" class=" col-xl-9 col-lg-9 col-sm-9 col-md-9 mb-12 pl-12 pl-0	" id='formSearch'>
+				<form action="/store" class=" col-xl-8 col-lg-9 col-sm-8 col-md-8 mb-12 pl-12 pl-0	" id='formSearch'>
 					<div class="p-1 pl-3 bg-light rounded rounded-pill shadow-sm ">
 						<div class="input-group">
 							<div class="dropdown-menu mt-1 resultSearchComplate" style="width: 95%; "
@@ -84,18 +148,20 @@
 					</div>
 				</form>
 				{{!-- search --}}
-				<div id="navbarSupportedContent"
-					class="collapse navbar-collapse col-xl-3 col-lg-3 col-sm-3 col-md-3 mb-0 pl-0">
+				<div id="navbarSupportedContent" class="col-xl-4 col-lg-4 col-sm-4 col-md-4 mb-0 pl-5">
 					{{#if lastName}}
 					{{!-- da dang nhap --}}
-					<ul class="navbar-nav ml-auto">
-						<li class="nav-item mr-4 active">
+					<div class="row">
+						<div class="col-6">
 							<div class="dropdown">
-								<a class="nav-link text-white font-italic btn border dropdown-toggle" type="button"
-									id="dropDowUser" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<i class="fad fa-user"> </i>&nbsp; {{lastName}}
+								<a class="nav-link text-white font-italic btn  dropdown-toggle bg-muted border border-muted"
+									type="button" id="dropDowUser" data-toggle="dropdown" aria-haspopup="true"
+									aria-expanded="false" style="padding: 5px;">
+									{{!-- <i class="fad fa-user"> </i> --}}
+									<img id='avatar' src="{{avatar}}" alt="" style="height: 30px; border-radius: 50%;">
+									&nbsp; <b>{{lastName}}</b>
 								</a>
-								<form class="dropdown-menu" aria-labelledby="dropDowUser" action="/account/logout"
+								<form class=" dropdown-menu" aria-labelledby="dropDowUser" action="/account/logout"
 									method="POST">
 
 									<a class="dropdown-item text-dark" href="/me/posted"><i class="fas fa-tasks"></i>
@@ -104,47 +170,30 @@
 											class="fad fa-sign-out"> &nbsp;</i> Đăng xuất </button>
 								</form>
 							</div>
-						</li>
-						<li class="nav-item active"><a href="/post/create"
+						</div>
+						<div class="col-6"><a href="/post/create"
 								class="nav-link btn btn-primary text-light font-italic"><i class="fad fa-newspaper"></i>
-								<b>ĐĂNG TIN</b></a></li>
-					</ul>
+								<b>ĐĂNG TIN</b></a></div>
+					</div>
 					{{else}}
 					{{!-- chua dang nhap --}}
-					<ul class="navbar-nav ml-auto">
-						<li class="nav-item mr-4 active"><a href="#" class="nav-link text-white font-italic"
-								data-toggle="modal" data-target="#loginModal "><i class="fad fa-user"></i>&nbsp; <u>Đăng
-									nhập</u> </a></li>
-						<li class="nav-item active"><a href="#" data-toggle="modal" data-target="#loginModal "
+					<div class='row'>
+						<div class="col-6 "><a href="#" class="nav-link text-white font-italic" data-toggle="modal"
+								data-target="#loginModal "><i class="fad fa-user"></i>&nbsp; <u>Đăng
+									nhập</u> </a></div>
+						<di class="col-6"><a href="#" data-toggle="modal" data-target="#loginModal "
 								class="nav-link btn btn-primary text-light font-italic"><i class="fad fa-newspaper"></i>
-								<b>ĐĂNG TIN</b></a></li>
-					</ul>
+								<b>ĐĂNG TIN</b></a></di>
+					</div>
 					{{/if}}
 				</div>
 			</div>
 	</div>
 	</nav>
 	</div>
-	{{!-- login fb plush --}}
-	<script>
-		window.fbAsyncInit = function () {
-			FB.init({
-				appId: '254008886189195',
-				xfbml: true,
-				version: 'v11.0'
-			});
-			FB.AppEvents.logPageView();
-		};
+	{{!-- script FB --}}
 
-		(function (d, s, id) {
-			var js, fjs = d.getElementsByTagName(s)[0];
-			if (d.getElementById(id)) { return; }
-			js = d.createElement(s); js.id = id;
-			js.src = "https://connect.facebook.net/en_US/sdk.js";
-			fjs.parentNode.insertBefore(js, fjs);
-		}(document, 'script', 'facebook-jssdk'));
-	</script>
-	{{!-- login fb plush --}}
+	{{!-- script FB --}}
 	<!-- Modal -->
 	<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
@@ -178,21 +227,35 @@
 								nhập</button>
 						</form>
 					</div>
-					{{!-- login FB --}}
-					<div class="container-fluid pb-3 text-center">
-
-						<a href="/account/fb">
-							Login with FB
-						</a>
-						<script>
-							function checkLoginState() {
-								FB.getLoginStatus(function (response) {
-									statusChangeCallback(response);
-								});
-							}
-						</script>
+					{{!-- login FB GG --}}
+					<div class="container-fluid mb-3" style="display: flex;justify-content: center;">
+						<div>
+							<div class="google-btn">
+								<div class="google-icon-wrapper">
+									<img style="position: absolute; margin-top: 3px; margin-left: 3px;width: 34px;height: 34px;"
+										src="/images/Facebook-f_Logo-Blue-Logo.wine.svg" />
+									{{!-- <i class="fab fa-facebook-square" style="font-size: 39px;"></i> --}}
+								</div>
+								<p class="btn-text"><b><a href="/account/fakebook" class="text-white">Sign in with
+											fakebook</a></b></p>
+							</div>
+						</div>
 					</div>
-					{{!-- /login FB --}}
+					<div class="container-fluid mb-3" style="display: flex;justify-content: center;">
+						<div>
+							<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+							<div class="google-btn bg-danger">
+								<div class="google-icon-wrapper">
+									<img class="google-icon"
+										src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" />
+								</div>
+								<p class="btn-text"><b><a href="/account/google" class="text-white mr-2	">Sign in with
+											google</a></b>
+								</p>
+							</div>
+						</div>
+					</div>
+					{{!-- /login FB GG --}}
 				</div>
 				<div id=" formSignin" style="display: none;">
 					<div class="modal-body pl-4 pr-4	">
@@ -243,7 +306,10 @@
 	</div>
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<script>
-
+		'use strict'
+		var notificationApi = 'https://localhost:3000/api/me/getNotification'
+		var avatarDefault = '/images/user5.png'
+		var sumQuantityNotification = 0
 
 		function autocompleteSearch() {
 			var search = $('#search').val()
@@ -277,20 +343,18 @@
 			document.getElementById('formSignin').style.display = 'none'
 			document.getElementById('formLogin').style.display = 'block'
 		}
-		// tat autocomplate
-		$(document).click(function (e) {
-			if ($(e.target).is('#formSearch'))
-				return;
-			alert(e.target)
-			$('#resultSearch').css('display', 'none')
-		});
-		document.addEventListener('DOMContentLoaded', function () {
 
+		document.addEventListener('DOMContentLoaded', function () {
+			// tat autocomplate
+			$(document).click(function (e) {
+				if ($(e.target).is('#formSearch'))
+					return;
+				$('#resultSearch').css('display', 'none')
+			});
 			$('#exampleModal').on('show.bs.modal', event => {
 				var button = $(event.relatedTarget);
 				var modal = $(this);
 				// Use above variables to manipulate the DOM
-
 			});
 			// hien autocomlate
 			$('#search').click(function () {
@@ -346,6 +410,118 @@
 				});
 		}
 
+		function getNotification(callback) {
+			fetch(notificationApi)
+				.then(function (res) {
+					return res.json()
+				})
+				.then(callback)
+				.catch(function (err) {
+					//No login
+					//	console.log(err)
+				});
+		}
+		function restartNotification() {
+			$('#dropdown-notification').html(`
+				<div class="  dropdown-item noNotification">
+										<div class='text-center'>
+											<p class='m-2'>Bạn chưa có thông báo nào </p>
+										</div>
+				</div>
+			`)
+			getNotification(loadNotification)
+		}
+		getNotification(loadNotification)
+		function loadNotification(notifications) {
+			sumQuantityNotification = 0
+			var render = document.getElementById('dropdown-notification')
+
+			if (notifications.length == 0) {
+				// khong co thong bao
+				return
+			}
+			render.innerHTML = ''
+			notifications.map((notification) => {
+				sumQuantityNotification += notification.amount
+				let avatar = notification.chatEnd.userSend.avatar == undefined ? avatarDefault : notification.chatEnd.userSend.avatar
+				if (notification.chatEnd.message.length > 38)
+					notification.chatEnd.message = notification.chatEnd.message.slice(0, 35) + ' ...'
+				render.innerHTML +=
+					`
+					<a  class="dropdown-item mt-1 bg-light rounded " href = "/me/chat/${notification.chatEnd.userSend._id}" id='user_send_${notification.chatEnd.userSend._id}' >
+						<div class="d-flex bd-highlight">
+							<div class="img">
+								<img src="${avatar
+					}"
+									class="rounded-circle user_img" >
+											</div >
+								<div class="info d-flex justify-content-space-between align-items-center">
+									<div>
+										<h6 class="m-0">${notification.chatEnd.userSend.lastName}
+											${notification.chatEnd.userSend.firstName}</h6>
+										<span class='message'>${notification.chatEnd.message}</span>
+									</div>
+									<i class="bg-danger text-white  pr-1 pl-1 amount">${notification.amount}</i>
+								</div>
+							</div >
+					
+									</a >
+									
+						`			})
+			setSumNotification()
+
+		}
+		//Receive notification - Socket
+		//io.to(socketID).emit('notification', data)
+		socket.on('notification', function (data) {
+			sumQuantityNotification += 1
+			setSumNotification()
+
+			var render = document.getElementById('dropdown-notification')
+			$('.noNotification').hide();
+			if ($('#user_send_' + data.user._id).text() != '') {
+				// da ton tai thong bao cua user nay
+				let amount = $('#user_send_' + data.user._id + ' .amount')
+				amount.text(parseInt(amount.text()) + 1)
+
+				$('#user_send_' + data.user._id + ' .message').text(data.chat.message)
+
+				return
+			}
+			let avatar = data.user.avatar == undefined ? avatarDefault : data.user.avatar
+			if (data.chat.message.length > 38)
+				data.chat.message = data.chat.message.slice(0, 35) + ' ...'
+			render.innerHTML =
+				`
+					<a class="dropdown-item" href = "/me/chat/${data.user._id}"   id='user_send_${data.user._id}'>
+						<div class="d-flex bd-highlight">
+							<div class="img">
+								<img src="${avatar
+				}"
+									class="rounded-circle user_img" >
+											</div >
+								<div class="info d-flex justify-content-space-between align-items-center">
+									<div>
+										<h6 class="m-0">${data.user.lastName}
+											${data.user.firstName}</h6>
+										<span class='message'>${data.chat.message}</span>
+									</div>
+									<i class="bg-danger text-white amount pr-1 pl-1">1</i>
+								</div>
+							</div >
+									</a >
+						` + render.innerHTML
+
+		})
+		function setSumNotification() {
+			$('.sumNotification').text(`(${sumQuantityNotification})`)
+			if (sumQuantityNotification != 0) {
+				$('.iconNotification').addClass('text-danger')
+			} else {
+				$('.sumNotification').text('')
+				$('.iconNotification').addClass('text-white')
+			}
+		}
 
 	</script>
 </header>

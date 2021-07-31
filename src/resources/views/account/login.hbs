@@ -1,0 +1,74 @@
+<div class="container-fluid">
+    <!-- Modal -->
+    <div class="container mt-4">
+        <h4 class="text-center  mb-4">Đăng nhập</h4>
+        <form method="POST" action="/account/login">
+            <div class="form-group">
+                <input type="email" name="username" class="form-control" id="emailLogin"
+                    placeholder="Nhập địa chỉ Email">
+            </div>
+            <div class="form-group">
+                <input type="password" name="password" class="form-control" id="passLogin" placeholder="Nhập mật khẩu">
+            </div>
+            <button type="submit" class="btn btn-info btn-block btn-round">Dăng
+                nhập</button>
+        </form>
+        <div class="container-fluid pb-3 text-center">
+            <a href="/account/fakebook">
+                Login with FB
+            </a>
+        </div>
+        <div class="container-fluid pb-3 text-center">
+            <a href="/account/google">Sign In with Google</a>
+        </div>
+    </div>
+</div>
+{{!-- login FB --}}
+
+
+
+
+<div id=" formSignin" style="display: none;">
+    <div class="modal-body pl-4 pr-4	">
+        <div class="container-fluid">
+            <div>
+                <h4 class="text-center text-info">Đăng kí</h4>
+                <br>
+            </div>
+        </div>
+        <div class="alert alert-danger" role="alert" id="alertSignin" style="display: none;">
+
+        </div>
+        <form action="/account/resgister" method="POST">
+            <div class="form-group">
+                <input type="email" class="form-control" name="email" id="emailSignin" placeholder="Nhập địa chỉ Email">
+                <small class="text-danger" style="display: none;">*</small>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <input type="text" class="form-control" name="firstName" id="firstName" placeholder="Nhập họ">
+                    <small class="text-danger" style="display: none;">*</small>
+                </div>
+                <div class="form-group col-sm-6">
+                    <input type="email" class="form-control" name="lastName" id="lastName" placeholder="Nhập tên">
+                    <small class="text-danger" style="display: none;">*</small>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" name="password" id="passSignin" placeholder="Nhập mật khẩu">
+                <small class="text-danger" style="display: none;">*</small>
+            </div>
+
+            <button type="button" class="btn btn-info btn-block btn-round" onclick="signin()">Đăng
+                kí</button>
+        </form>
+    </div>
+    <div class="modal-footer d-flex justify-content-center">
+        <div> <a onclick="onFormLogin()" class="text-info"> Quay lại Đăng nhập</a>.
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+</div>

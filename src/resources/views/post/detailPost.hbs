@@ -1,0 +1,150 @@
+<div class="container-fluid bg-light" id='detail'>
+    {{!-- breadcumb --}}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0 bg-light">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item "> <a href="/store">post</a></li>
+            <li class="breadcrumb-item active" aria-current="page">detail</li>
+        </ol>
+    </nav>
+    {{!-- breadcumb --}}
+    <div class="container">
+        <div class="card">
+            <div class="row">
+                <aside class="col-sm-6 ">
+                    <article class="gallery-wrap">
+                        <div class="img-big-wrap">
+                            <div> <a href="#"><img src="{{image1}}"></a></div>
+                        </div> <!-- slider-product.// -->
+                        <div class="img-small-wrap">
+                            <div class="item-gallery"> <img src="{{image2}}"> </div>
+                            <div class="item-gallery"> <img src="{{image3}}"> </div>
+                        </div> <!-- slider-nav.// -->
+                    </article> <!-- gallery-wrap .end// -->
+                </aside>
+                <aside class=" col-sm-6">
+                    <article class="card-body p-4">
+                        <h3 class="title mb-3">{{post.name}}</h3>
+                        <p class="price-detail-wrap">
+                            <span class="price h3 text-warning">
+                                <span class="num">{{formatMoneyVN}}</span><span class="currency"></span>
+                            </span>
+                            {{!-- <span>/cuốn</span> --}}
+                        </p> <!-- price-detail-wrap .// -->
+                        <dl class="item-property">
+                            <dt>Miêu tả:</dt>
+                            <dd>
+                                <p> {{post.description}} Here goes description consectetur adipisicing elit, sed do
+                                    eiusmod
+                                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+                                    veniam,
+                                    quis nostrud exercitation ullamco </p>
+                            </dd>
+                        </dl>
+                        {{!-- <dl class="param param-feature">
+                            <dt>POST#</dt>
+                            <dd>12345611</dd>
+                        </dl> <!-- item-property-hor .// --> --}}
+                        <dl class="param param-feature">
+                            <b>Tình trạng sách: </b>
+                            <span type="button" class="btn text-danger border border-danger">{{post.condition}}%</span>
+                        </dl>
+                        <dl class="param param-feature">
+                            <b>Thời gian đăng: </b>
+                            <small>{{timeAgo}}</small>
+                        </dl> <!-- item-property-hor .// -->
+                        <dl class="param param-feature">
+                            <b>Người bán: </b>
+                            <a href="#" class="btn text-info">
+                                <b>{{post.owner.lastName}}&nbsp;{{post.owner.firstName}}</b>
+                            </a>
+                        </dl> <!-- item-property-hor .// -->
+
+                        {{!--
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <dl class="param param-inline">
+                                    <dt>Quantity: </dt>
+                                    <dd>
+                                        <select class="form-control form-control-sm" style="width:70px;">
+                                            <option> 1 </option>
+                                            <option> 2 </option>
+                                            <option> 3 </option>
+                                        </select>
+                                    </dd>
+                                </dl> <!-- item-property .// -->
+                            </div> <!-- col.// -->
+                            <div class="col-sm-7">
+                                <dl class="param param-inline">
+                                    <dt>Size: </dt>
+                                    <dd>
+                                        <label class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions"
+                                                id="inlineRadio2" value="option2">
+                                            <span class="form-check-label">SM</span>
+                                        </label>
+                                        <label class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions"
+                                                id="inlineRadio2" value="option2">
+                                            <span class="form-check-label">MD</span>
+                                        </label>
+                                        <label class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions"
+                                                id="inlineRadio2" value="option2">
+                                            <span class="form-check-label">XXL</span>
+                                        </label>
+                                    </dd>
+                                </dl> <!-- item-property .// -->
+                            </div> <!-- col.// -->
+                        </div> <!-- row.// --> --}}
+                        <hr>
+                        {{!-- <a href="#" class="btn btn-lg btn-primary text-uppercase"> Buy now </a> --}}
+                        <a href="/me/chat/{{post.owner._id}}" class="btn btn-lg btn-outline-primary text-uppercase"> <i
+                                class="fas fa-shopping-cart"></i>
+                            Chat với người bán</a>
+                    </article> <!-- card-body.// -->
+                </aside> <!-- col.// -->
+            </div> <!-- row.// -->
+        </div> <!-- card.// -->
+    </div>
+</div>
+
+<style>
+    #detail .gallery-wrap .img-big-wrap img {
+
+        height: 100%;
+        display: inline-block;
+        cursor: zoom-in;
+    }
+
+    #detail .gallery-wrap .img-big-wrap {
+        display: flex;
+        justify-content: center;
+        background-color: whitesmoke;
+        height: 450px;
+    }
+
+    #detail .gallery-wrap .img-small-wrap .item-gallery {
+        width: 100px;
+        height: 80px;
+        border: 1px solid #ddd;
+        margin: 7px 2px;
+        display: inline-block;
+        overflow: hidden;
+    }
+
+
+    #detail .gallery-wrap .img-small-wrap {
+        text-align: center;
+        justify-content: center;
+    }
+
+    #detail .gallery-wrap .img-small-wrap img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: cover;
+        border-radius: 4px;
+        cursor: zoom-in;
+    }
+</style>

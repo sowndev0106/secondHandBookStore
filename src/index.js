@@ -1,48 +1,68 @@
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config()
-}
 
 const express = require('express')
 var morgan = require('morgan')
 const path = require('path')
-const exphbs = require('express-handlebars');
+var exphbs = require('express-handlebars');
 var router = require('./router')
+const moment = require("moment");
 const app = express()
 const methodOverride = require('method-override')
 const port = 3000
 const handlebars = require('handlebars')
 const db = require('./config/db')
 var cookieParser = require('cookie-parser')
-const accountMiddlewares = require('./app/middlewarses/AccountMiddlewarses')
-const flash = require('express-flash')
-const session = require('express-session')
-const passport = require('passport')
+var accountMiddlewares = require('./app/middlewarses/AccountMiddlewarses')
+var flash = require('express-flash')
+var session = require('express-session')
+var passport = require('passport')
+var Chat = require('./app/models/Chat')
+var Room = require('./app/models/Room')
+var User = require('./app/models/User')
+// custom login passport
+require('..//src/config/passport/passport-config')
+var socketConfig = require('./config/socket/socket')
 
 // https
-var https = require('https');
+var https = require('https')
 var fs = require('fs');
+const convertText = require('./util/convertText');
+const sslServer = https.createServer({
+  key: fs.readFileSync('./cert/key.pem'),
+  cert: fs.readFileSync('./cert/cert.pem'),
+}, app)
 
+const sessionMiddleware = session({ secret: "changeit", resave: false, saveUninitialized: false });
+app.use(sessionMiddleware);
+const io = require('socket.io')(sslServer);
+const wrap = middleware => (socket, next) => middleware(socket.request, {}, next);
+io.use(wrap(sessionMiddleware));
+io.use(wrap(passport.initialize()));
+io.use(wrap(passport.session()));
+socketConfig(io)
 // ket noi database
 db.connect()
 
-
-
-//part thanh res.pody
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({
   extended: true
 }))
+app.use(cookieParser());
+// phai cau hinh session truoc sau co moi cau hinh passport
+// app.use(session({
+//   secret: 'something',
+//   resave: false,
+//   saveUninitialized: false,
+//   cookie: {
+//     maxAge: 1000 * 60 * 60 * 1  // 1 hours
+//   }
+// }));
 // khoi tao passport
+
 app.use(passport.initialize())
 app.use(passport.session())
 
 // login 
-// app.use(flash())
-app.use(session({
-  secret: 'mySecrect'
-  // resave: false,
-  // saveUninitialized: false
-}))
+app.use(flash())
 
 // over PUT DELETE GET POST
 app.use(methodOverride('_method'))
@@ -57,69 +77,10 @@ app.use(morgan('tiny'))
 var hbs = exphbs.create({
   // Specify helpers which are only registered on this instance.
   extname: '.hbs',
-  helpers: {
-    dropText: function (a, number1, number2) {
-      if (a == undefined)
-        return ''
-      var length = a.split(' ').length
-      if (a.length > number2) {
-        a = a.slice(0, number2);
-      } else {
-        if (length > number1) {
-          a = a.split(' ').splice(0, number1).join(' ');
-          a += " ..."
-        } else {
-          if (a.length < (number2 / 2)) {
-            a += '<br> <br>'
-          }
-        }
-
-
-      }
-      return a
-    },
-    selected: function (a, b) {
-      return a == b ? 'selected' : ''
-    },
-    addOne: (a, b) => { return a + b },
-    disabled: (a) => { return a ? '' : 'disabled' },
-    softHelper: function (column, soft) {
-
-      var softType = column === soft.column ? soft.type : 'default'
-      var icons = {
-        default: 'fad fa-sort',
-        asc: 'fal fa-sort-amount-up-alt',
-        desc: 'fal fa-sort-amount-down-alt'
-      }
-      var type = {
-        default: 'desc',
-        asc: 'desc',
-        desc: 'asc'
-      }
-      var text
-      if (column == 'createdAt') {
-        text = 'Thời gian tạo'
-      } else if ((column == 'price')) {
-        text = 'Giá'
-      } else {
-        text = 'Tên'
-      }
-      const addresses = handlebars.escapeExpression(`?soft=${column}&type=${type[soft.type]}`)
-      var output = `<a href=" ${addresses}" 
-                class=" btn border " >  ${text}
-                 <i class="${icons[softType]} text-primary"></i>
-              </a>`
-      return new handlebars.SafeString(output);
-    },
-    active: (a, b) => { return a == b ? 'active' : '' }
-  }
+  helpers: require('./helper/helperHandlebars')
 });
 app.engine('hbs', hbs.engine)
 app.set('view engine', 'hbs');
-
-
-// ADD COOKIE
-app.use(cookieParser())
 
 
 // custom middlewarse 
@@ -129,13 +90,17 @@ app.use(accountMiddlewares.addUserLocal)
 //  cau truc thu muc lai
 app.set('views', path.join(__dirname, 'resources/views'));
 
+
+// io.use((socket, next) => {
+//   console.log(socket.request.session.passport)
+//   if (socket.request.session.passport.user) {
+
+//     next();
+//   } else {
+//     next(new Error('unauthorized'))
+//   }
+// });
+
 router(app)
 
-// app.listen(port, () => {
-// })
-
-const sslServer = https.createServer({
-  key: fs.readFileSync('./cert/key.pem'),
-  cert: fs.readFileSync('./cert/cert.pem'),
-}, app)
 sslServer.listen(port, () => console.log(`Secure server on https://localhost:${port}`))

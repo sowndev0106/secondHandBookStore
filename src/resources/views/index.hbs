@@ -1,6 +1,6 @@
 <div id="home">
   <div class="bg-light">
-    <div class="container-fluid">
+    <div class="container-fluid pl-0 pr-0">
       <div class="h-100 align-items-center py-0">
         <div class="fadeOut owl-carousel owl-theme">
           <div class="item" style="overflow: hidden; height: 350px;">
@@ -68,14 +68,14 @@
         {{#each postsNew}}
         <div class="col-xl-3 col-sm-4 col-6 mb-3 pl-2 pr-2 pl-1 pr-1">
           <div class="card card_book">
-            <div class="img">
+            <a class="img" href="/post/detail/{{this._id}}">
               <img src="{{this.images}}" class="" alt="..." style="height: 100%;" />
-            </div>
+            </a>
             <div class="card-body">
               <h6 class="card-title color_name">{{{dropText this.name 10 65}}}
               </h6>
               <h6>Giá:
-                <span class="text-danger">{{this.price}} VND</span>
+                <span class="text-danger">{{{fomartMoney this.price}}} </span>
               </h6>
               <small class="text-mute"><i class="fad fa-clock"></i>&nbsp;&nbsp;{{this.timeAgo}}</small>
               <br />

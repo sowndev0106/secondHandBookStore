@@ -1,56 +1,28 @@
-const User = require('../models/User')
-module.exports.requireLogin = function (req, res, next) {
-    try {
-        if (!req.cookies.userId) {
-            res.redirect('back')
-            return
-        }
-        User.findOne({ _id: req.cookies.userId })
-            .then(function (user) {
-                if (!user) {
-                    res.redirect('back')
-                    return;
-                }
-            })
-            .catch(function () {
-                throw new Error
-            })
-    } catch (err) {
-        res.redirect('back')
-        return;
-    }
-    next()
-}
 // neu da dang nhap roi thi chuyen lai trang / neu chua moi cho vao trang login
 module.exports.checklogged = function (req, res, next) {
-    try {
-        if (!req.cookies.userId) {
-            next()
-        } else {
-            res.redirect('/')
-        }
-    } catch (err) {
-        next()
-    }
+    if (req.isAuthenticated())
+        return next();
+    res.redirect('/account/login');
+
+}
+module.exports.checkNoLogged = function (req, res, next) {
+    if (!req.isAuthenticated())
+        return next();
+    res.redirect('/');
+
 }
 // show user name da login
 module.exports.addUserLocal = function (req, res, next) {
-
     try {
-        if (req.cookies.userID && req.cookies.lastName) {
-                res.locals.userID = req.cookies.userID
-                res.locals.lastName = req.cookies.lastName
-            // User.findOne({ _id: req.cookies.userID })
-            // .then(function (user) {
-            //     if (user) {
-            //         res.locals.userID = req.cookies.userID
-            //         res.locals.lastName = req.cookies.lastName
-                   
-            //     } else {
-            //         req.cookies.userID = undefined
-            //         req.cookies.lastName = undefined
-            //     }
-            // })
+        if (req.user) {
+            res.locals.userID = req.user._id
+            res.locals.lastName = req.user.lastName
+            if (req.user.avatar) {
+                res.locals.avatar = req.user.avatar
+            } else {
+                res.locals.avatar = '/images/user5.png'
+            }
+
         }
     } catch (err) {
         console.log('ERROR accountMiddlewares addUserLocal ' + err.message)

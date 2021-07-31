@@ -55,7 +55,7 @@ class StoreController {
             path: 'subject',
             populate: { path: 'department', match: { slug: 'cong-nghe-thong-tin' } }
 
-        }, { path: 'owner' }]);
+        }]);
         Department.findOne({ slug: slug })
             .then(function (department) {
                 var query = { deleted: false, department: department._id }
@@ -89,7 +89,7 @@ class StoreController {
         Post.
             aggregate(
                 [{ "$match": { englishAlphabetLowercased: search } },
-                { "$group": { "_id": "$englishAlphabetLowercased" } },
+                { "$group": { "_id": "$name" } },
                 { "$limit": 10 }
                 ])
             .then(posts => {

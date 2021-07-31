@@ -1,3 +1,4 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:500);
 #home .departmentItems:hover a {
   text-decoration: none; }
 
@@ -19,6 +20,85 @@
 .resultSearchComplate a {
   font-size: 14px; }
 
+.google-btn {
+  width: 200px;
+  height: 42px;
+  background-color: #4285f4;
+  border-radius: 2px;
+  box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.25); }
+  .google-btn .google-icon-wrapper {
+    position: absolute;
+    margin-top: 1px;
+    margin-left: 1px;
+    width: 40px;
+    height: 40px;
+    border-radius: 2px;
+    background-color: #fff; }
+  .google-btn .google-icon {
+    position: absolute;
+    margin-top: 11px;
+    margin-left: 11px;
+    width: 18px;
+    height: 18px; }
+  .google-btn .google-icon {
+    position: absolute;
+    margin-top: 11px;
+    margin-left: 11px;
+    width: 18px;
+    height: 18px; }
+  .google-btn .btn-text {
+    float: right;
+    margin: 11px 11px 0 0;
+    color: #fff;
+    font-size: 14px;
+    letter-spacing: 0.2px;
+    font-family: "Roboto"; }
+  .google-btn:hover {
+    box-shadow: 0 0 6px #4285f4; }
+  .google-btn:active {
+    background: #1669F2; }
+
+header #dropdown-notification{
+  left: -160px;
+  width: 370px;
+  max-height: 380px;
+}
+header #dropdown-notification hr{
+ margin:10px
+}
+header #dropdown-notification .dropdown-item{
+  /* border-bottom: 1px solid rgb(235, 231, 231) */
+}
+header #dropdown-notification .img{
+  display:flex;
+  align-items: center;
+  margin-right: 16px;
+
+}
+header #dropdown-notification .img img{
+  height: 40px;
+   width: 40px;
+
+}
+
+header #dropdown-notification .info{
+ white-space: normal;
+ width:100%;
+  
+}
+header #dropdown-notification i{
+font-size:13px;
+  position: absolute;
+  border-radius: 20%;
+  left:300px
+}
+.sumNotification{
+ font-size: 12px;
+}
+header #dropdown-notification .info .message{
+  font-size:11px
+  
+}
 .color_blue {
   color: #225486; }
 
@@ -45,3 +125,10 @@
 .card_book .img:hover img {
   transition: 500ms;
   transform: scale(1.1); }
+
+#detail .gallery-wrap .img-small-wrap img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: zoom-in; }

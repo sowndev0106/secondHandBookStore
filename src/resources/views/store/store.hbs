@@ -79,14 +79,14 @@
                     {{#each posts}}
                     <div class="col-xl-3 .col-lg-3 .col-md-3 col-sm-4 col-6 mb-3  pl-2 pr-2">
                         <div class="card card_book ">
-                            <div class="img">
+                            <a href="post/detail/{{this._id}}" class="img">
                                 <img src="{{this.images}}" class="" alt="..." />
-                            </div>
+                            </a>
                             <div class="card-body">
                                 <h6 class="card-title color_name">{{{dropText this.name 10 65}}}
                                 </h6>
                                 <h6>Giá:
-                                    <span class="text-danger">{{this.price}} VND</span>
+                                    <span class="text-danger">{{{fomartMoney this.price}}} </span>
                                 </h6>
                                 <small class="text-mute"><i
                                         class="fad fa-clock"></i>&nbsp;&nbsp;{{this.timeAgo}}</small>
