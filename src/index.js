@@ -25,14 +25,22 @@ var socketConfig = require('./config/socket/socket')
 // https
 var https = require('https')
 var fs = require('fs');
-const sslServer = https.createServer({
-  key: fs.readFileSync('./cert/key.pem'),
-  cert: fs.readFileSync('./cert/cert.pem'),
-}, app)
+// const sslServer = https.createServer({
+//   key: fs.readFileSync('./cert/key.pem'),
+//   cert: fs.readFileSync('./cert/cert.pem'),
+// }, app)
 
 const sessionMiddleware = session({ secret: "changeit", resave: false, saveUninitialized: false });
 app.use(sessionMiddleware);
-const io = require('socket.io')(sslServer);
+//local 
+// const io = require('socket.io')(sslServer);
+//server
+// var http = require('http')
+// var server = https.createServer(app);
+// var io = require('socket.io').listen(server);
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+
 const wrap = middleware => (socket, next) => middleware(socket.request, {}, next);
 io.use(wrap(sessionMiddleware));
 io.use(wrap(passport.initialize()));
@@ -103,4 +111,4 @@ app.set('views', path.join(__dirname, 'resources/views'));
 router(app)
 
 // sslServer.listen(port, () => console.log(`Secure server on https://localhost:${port}`))
-app.listen(port, () => console.log("server start succeeded"))
+server.listen(port, () => console.log("server start succeeded"))
