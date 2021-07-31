@@ -11,9 +11,7 @@ router.get('/login', accountMiddlewares.checkNoLogged, loginController.loginPage
 router.get('/signup', accountMiddlewares.checkNoLogged, loginController.showResgister);
 router.post('/login', passport.authenticate('local'), loginController.login);
 router.get('/fakebook', passport.authenticate('facebook', { scope: ['email'] }))
-route.get('/fakebook/callback', function (req, res) {
-    res.json('voo day')
-})
+
 router.use('/fakebook/callback', passport.authenticate('facebook', { failureRedirect: '/account/login', successRedirect: '/' }))
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/account/login', successRedirect: 'back' }), loginController.google)
