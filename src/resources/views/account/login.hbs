@@ -1,7 +1,7 @@
 <div class="container-fluid ">
     <!-- Modal -->
     <div class="container mt-4" id='loginPage'>
-        <h4 class="text-center  color_title mb-4">Đăng nhập</h4>
+        <h4 class="text-center  text-info mb-4">Đăng nhập</h4>
         <div>
             <div class="alert alert-danger d-none" role="alert" id='alertLoginPage'>
 
@@ -17,14 +17,15 @@
             <button type="submit" class="btn btn-info btn-block btn-round">Dăng
                 nhập</button>
             <div class='text-center mt-1'>
-                <a href="#">Bạn chưa có tài khoảng ? </a>
+                <a onclick="onFormRegisterPage()" href="#">Bạn chưa có tài khoảng ? </a>
             </div>
         </div>
         <br>
     </div>
-    <div id=" formSignin" style="display: none;">
-        <div class="modal-body pl-4 pr-4	">
-            <h4 class="text-center color_title text-info">Đăng kí</h4>
+    <div id="registerPage" style="display:none">
+        <div class=" container pl-4 pt-4">
+            <h4 class="text-center text-info">Đăng kí</h4>
+            <br>
             <div>
                 <div class="alert alert-danger d-none" role="alert" id='alertSigninPage'>
 
@@ -56,8 +57,8 @@
                     kí</button>
             </form>
         </div>
-        <div class='text-center'>
-            <a onclick="onFormLogin()" class="text-info"> Quay lại Đăng nhập</a>
+        <div class='text-center mb-4'>
+            <a onclick="onFormLoginPage()" href="#" class="text-primary"> Quay lại Đăng nhập</a>
         </div>
 
     </div>
@@ -96,15 +97,16 @@
 
 
 <script>
-    function onFormSignin() {
-        document.getElementById('formSignin').style.display = 'block'
-        document.getElementById('formLogin').style.display = 'none'
-    }
-    function onFormLogin() {
-        document.getElementById('formSignin').style.display = 'none'
-        document.getElementById('formLogin').style.display = 'block'
+
+    function onFormRegisterPage() {
+        $('#registerPage').show()
+        $('#loginPage').hide()
     }
 
+    function onFormLoginPage() {
+        $('#registerPage').hide()
+        $('#loginPage').show()
+    }
     document.addEventListener('DOMContentLoaded', function () {
         $('#loginPage button[type=submit]').click(function () {
             var username = $('#loginPage input[name="usernamePage"]').val()
