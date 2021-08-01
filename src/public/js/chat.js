@@ -25,6 +25,7 @@ function loadMessageWithPage(page) {
         </div>
             `)
                 throw 'no have room'
+
             }
             let messages = result.data.chats.docs
 
@@ -39,9 +40,18 @@ function loadMessageWithPage(page) {
             }
             var rooms = result.data.rooms
 
-            showRooms(rooms)
-            if (messages) {
-                showMessages(messages)
+
+            try {
+                showRooms(rooms)
+            } catch (error) {
+                console.log('load room' + error)
+            }
+            try {
+                if (messages) {
+                    showMessages(messages)
+                }
+            } catch (error) {
+                console.log('load message' + error)
             }
             chatBotom()
             // delete notification
