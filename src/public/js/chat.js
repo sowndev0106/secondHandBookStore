@@ -1,6 +1,5 @@
 'use strict'
 
-const e = require("express")
 
 var userReceive = window.location.href.split('/')[window.location.href.split('/').length - 1]
 var time = (new Date()).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
