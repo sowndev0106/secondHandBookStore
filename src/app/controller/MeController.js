@@ -78,22 +78,21 @@ class Mecontroller {
       });
   }
   chat(req, res, next) {
-    function async() {
-      var user1 = req.user._id
-      var user2 = req.params.userID
-      if (user2) {
-        // check have room // find or create
-        await Room.findOne({ member: { $all: [user1, user2] } }, function (err, data) {
-          if (!data) {
-            var room = new Room()
-            room.member.push(user1)
-            room.member.push(user2)
-            room.save()
-          }
-        })
-      }
-      res.render('me/chat')
+
+    var user1 = req.user._id
+    var user2 = req.params.userID
+    if (user2) {
+      // check have room // find or create
+      await Room.findOne({ member: { $all: [user1, user2] } }, function (err, data) {
+        if (!data) {
+          var room = new Room()
+          room.member.push(user1)
+          room.member.push(user2)
+          room.save()
+        }
+      })
     }
+    res.render('me/chat')
 
   }
   // [GET] /me/getMessages
