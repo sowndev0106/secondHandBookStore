@@ -315,7 +315,7 @@
 			axios.get('/store/search-complete?q=' + search)
 				.then(function (response) {
 					var data = response.data
-					index = 0
+					let index = 0
 					var result = ''
 					while (index < data.length) {
 						result += `

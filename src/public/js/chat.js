@@ -115,7 +115,6 @@ function showRooms(rooms) {
     listRoom.innerHTML = ''
     rooms.forEach((room) => {
         try {
-            console.log('Room' + room)
             // check onlinew ; if true online : offline
             listUserInRoom[room.member[0]._id] = false
             let avatar = room.member[0].avatar == undefined ? avatarDefault : room.member[0].avatar
