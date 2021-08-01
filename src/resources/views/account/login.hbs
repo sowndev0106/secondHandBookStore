@@ -1,55 +1,92 @@
-<div class="container-fluid">
+<div class="container-fluid ">
     <!-- Modal -->
-    <div class="container mt-4">
-        <h4 class="text-center  mb-4">Đăng nhập</h4>
-        <form method="POST" action="/account/login">
+    <div class="container mt-4" id='loginPage'>
+        <h4 class="text-center  color_title mb-4">Đăng nhập</h4>
+        <div>
+            <div class="alert alert-danger d-none" role="alert" id='alertLoginPage'>
+
+            </div>
+        </div>
+        <div>
             <div class="form-group">
-                <input type="email" name="username" class="form-control" id="emailLogin"
-                    placeholder="Nhập địa chỉ Email">
+                <input type="email" name="usernamePage" class="form-control" placeholder="Nhập địa chỉ Email">
             </div>
             <div class="form-group">
-                <input type="password" name="password" class="form-control" id="passLogin" placeholder="Nhập mật khẩu">
+                <input type="password" name="passwordPage" class="form-control" placeholder="Nhập mật khẩu">
             </div>
             <button type="submit" class="btn btn-info btn-block btn-round">Dăng
                 nhập</button>
-        </form>
-        {{!-- <div class="container-fluid pb-3 text-center">
-            <a href="/account/fakebook">
-                Login with FB
-            </a>
+            <div class='text-center mt-1'>
+                <a href="#">Bạn chưa có tài khoảng ? </a>
+            </div>
         </div>
-        <div class="container-fluid pb-3 text-center">
-            <a href="/account/google">Sign In with Google</a>
-        </div> --}}
         <br>
-        <div class="container-fluid mb-3" style="display: flex;justify-content: center;">
+    </div>
+    <div id=" formSignin" style="display: none;">
+        <div class="modal-body pl-4 pr-4	">
+            <h4 class="text-center color_title text-info">Đăng kí</h4>
             <div>
-                <div class="google-btn">
-                    <div class="google-icon-wrapper">
-                        <img style="position: absolute; margin-top: 3px; margin-left: 3px;width: 34px;height: 34px;"
-                            src="/images/Facebook-f_Logo-Blue-Logo.wine.svg" />
-                        {{!-- <i class="fab fa-facebook-square" style="font-size: 39px;"></i> --}}
-                    </div>
-                    <p class="btn-text"><b><a href="/account/fakebook" class="text-white">Sign in with
-                                fakebook</a></b></p>
+                <div class="alert alert-danger d-none" role="alert" id='alertSigninPage'>
+
                 </div>
             </div>
+            <form action="#" method="POST">
+                <div class="form-group">
+                    <input type="email" class="form-control" name="email" id="emailSignin"
+                        placeholder="Nhập địa chỉ Email">
+                    <small class="text-danger" style="display: none;">*</small>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <input type="text" class="form-control" name="firstName" id="firstName" placeholder="Nhập họ">
+                        <small class="text-danger" style="display: none;">*</small>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <input type="email" class="form-control" name="lastName" id="lastName" placeholder="Nhập tên">
+                        <small class="text-danger" style="display: none;">*</small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" name="password" id="passSignin"
+                        placeholder="Nhập mật khẩu">
+                    <small class="text-danger" style="display: none;">*</small>
+                </div>
+
+                <button type="button" class="btn btn-info btn-block btn-round" onclick="signin()">Đăng
+                    kí</button>
+            </form>
         </div>
-        <div class="container-fluid mb-3 " style="display: flex;justify-content: center;">
-            <div>
-                <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
-                <div class="google-btn bg-danger">
-                    <div class="google-icon-wrapper">
-                        <img class="google-icon"
-                            src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" />
-                    </div>
-                    <p class="btn-text"><b><a href="/account/google" class="text-white mr-2	">Sign in with
-                                google</a></b>
-                    </p>
-                </div>
-            </div>
+        <div class='text-center'>
+            <a onclick="onFormLogin()" class="text-info"> Quay lại Đăng nhập</a>
         </div>
 
+    </div>
+    <div class="container-fluid mb-3" style="display: flex;justify-content: center;">
+        <div>
+            <div class="google-btn">
+                <div class="google-icon-wrapper">
+                    <img style="position: absolute; margin-top: 3px; margin-left: 3px;width: 34px;height: 34px;"
+                        src="/images/Facebook-f_Logo-Blue-Logo.wine.svg" />
+                    {{!-- <i class="fab fa-facebook-square" style="font-size: 39px;"></i> --}}
+                </div>
+                <p class="btn-text"><b><a href="/account/fakebook" class="text-white">Sign in with
+                            fakebook</a></b></p>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid mb-3 " style="display: flex;justify-content: center;">
+        <div>
+            <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+            <div class="google-btn bg-danger">
+                <div class="google-icon-wrapper">
+                    <img class="google-icon"
+                        src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" />
+                </div>
+                <p class="btn-text"><b><a href="/account/google" class="text-white mr-2	">Sign in with
+                            google</a></b>
+                </p>
+            </div>
+        </div>
     </div>
 </div>
 <br> <br> <br> <br>
@@ -58,47 +95,63 @@
 
 
 
-<div id=" formSignin" style="display: none;">
-    <div class="modal-body pl-4 pr-4	">
-        <div class="container-fluid">
-            <div>
-                <h4 class="text-center text-info">Đăng kí</h4>
-                <br>
-            </div>
-        </div>
-        <div class="alert alert-danger" role="alert" id="alertSignin" style="display: none;">
+<script>
+    function onFormSignin() {
+        document.getElementById('formSignin').style.display = 'block'
+        document.getElementById('formLogin').style.display = 'none'
+    }
+    function onFormLogin() {
+        document.getElementById('formSignin').style.display = 'none'
+        document.getElementById('formLogin').style.display = 'block'
+    }
 
-        </div>
-        <form action="/account/resgister" method="POST">
-            <div class="form-group">
-                <input type="email" class="form-control" name="email" id="emailSignin" placeholder="Nhập địa chỉ Email">
-                <small class="text-danger" style="display: none;">*</small>
-            </div>
-            <div class="row">
-                <div class="form-group col-sm-6">
-                    <input type="text" class="form-control" name="firstName" id="firstName" placeholder="Nhập họ">
-                    <small class="text-danger" style="display: none;">*</small>
-                </div>
-                <div class="form-group col-sm-6">
-                    <input type="email" class="form-control" name="lastName" id="lastName" placeholder="Nhập tên">
-                    <small class="text-danger" style="display: none;">*</small>
-                </div>
-            </div>
-            <div class="form-group">
-                <input type="password" class="form-control" name="password" id="passSignin" placeholder="Nhập mật khẩu">
-                <small class="text-danger" style="display: none;">*</small>
-            </div>
+    document.addEventListener('DOMContentLoaded', function () {
+        $('#loginPage button[type=submit]').click(function () {
+            var username = $('#loginPage input[name="usernamePage"]').val()
+            var password = $('#loginPage input[name="passwordPage"]').val()
+            axios.post('/account/login', {
+                username,
+                password
+            })
+                .then(function (res) {
+                    console.log(res.data)
+                    if (res.data.status) {
+                        // dang nhap thanh cong
+                        document.location.href = '/'
+                    } else {
+                        $('#alertLoginPage').removeClass('d-none')
+                        $('#alertLoginPage').text('tài khoảng mật khẩu không đúng')
+                    }
+                })
+                .catch(function (error) {
+                    $('#alertLoginPage').removeClass('d-none')
+                    $('#alertLoginPage').text('tài khoảng mật khẩu không đúng')
+                });
+        });
+        function signin() {
+            var email = document.getElementById('emailSignin').value
+            var password = document.getElementById('passSignin').value
+            var lastName = document.getElementById('lastName').value
+            var firstName = document.getElementById('firstName').value
+            axios.post('/account/resgister', {
+                email,
+                password,
+                lastName,
+                firstName
+            })
+                .then(function (res) {
+                    if (res.data.status) {
+                        // dang nhap thanh cong
+                        location.reload();
+                    } else {
+                        document.getElementById('alertSignin').style.display = 'block'
+                        document.getElementById('alertSignin').innerHTML = res.data.error
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
 
-            <button type="button" class="btn btn-info btn-block btn-round" onclick="signin()">Đăng
-                kí</button>
-        </form>
-    </div>
-    <div class="modal-footer d-flex justify-content-center">
-        <div> <a onclick="onFormLogin()" class="text-info"> Quay lại Đăng nhập</a>.
-        </div>
-    </div>
-</div>
-</div>
-</div>
-</div>
-</div>
+    })
+</script>

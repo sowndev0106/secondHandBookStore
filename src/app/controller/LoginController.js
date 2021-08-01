@@ -10,6 +10,8 @@ class LoginController {
     }
     // [POST] /Login 
     login(req, res, next) {
+
+
         if (req.user) {
             res.json({
                 status: true
@@ -19,6 +21,7 @@ class LoginController {
                 status: false
                 , error: "Tài khoảng hoặc mật khẩu không đúng"
             })
+            return
         }
 
         // passport.authenticate('local', function (err, user, done) {
