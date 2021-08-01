@@ -1,4 +1,7 @@
 'use strict'
+
+const e = require("express")
+
 var userReceive = window.location.href.split('/')[window.location.href.split('/').length - 1]
 var time = (new Date()).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
 var avatarDefault = '/images/user5.png'
@@ -106,35 +109,37 @@ function showMessages(messages) {
 
 }
 function showRooms(rooms) {
-    console.log('Room' + rooms)
+
     if (rooms.length == 0)
         return
     var listRoom = document.getElementById('listRoom')
     listRoom.innerHTML = ''
     rooms.forEach((room) => {
-        // check onlinew ; if true online : offline
-        listUserInRoom[room.member[0]._id] = false
-        let avatar = room.member[0].avatar == undefined ? avatarDefault : room.member[0].avatar
-        let active = room.member[0]._id == userReceive ? 'active' : ''
-        let miss = room.miss || 0
-        let checkMiss
-        if (miss == 0) {
-            checkMiss = 'style="display: none"'
-        }
-        let lastMassage
-        if (room.chatEnd) {
-            lastMassage = room.chatEnd.message
-            if (lastMassage.length > 27)
-                lastMassage = lastMassage.substr(0, 25) + ' ...'
-            if (room.chatEnd.userSend === userReceive) {
-                lastMassage = `<p id ='chat_end_${room.member[0]._id}'>${room.member[0].lastName}: ${lastMassage}  </p>`
-            } else {
-                lastMassage = `<p id ='chat_end_${room.member[0]._id}'>Bạn: ${lastMassage}  </p>`
+        try {
+            console.log('Room' + room)
+            // check onlinew ; if true online : offline
+            listUserInRoom[room.member[0]._id] = false
+            let avatar = room.member[0].avatar == undefined ? avatarDefault : room.member[0].avatar
+            let active = room.member[0]._id == userReceive ? 'active' : ''
+            let miss = room.miss || 0
+            let checkMiss
+            if (miss == 0) {
+                checkMiss = 'style="display: none"'
             }
-        } else {
-            lastMassage = ''
-        }
-        listRoom.innerHTML += `
+            let lastMassage
+            if (room.chatEnd) {
+                lastMassage = room.chatEnd.message
+                if (lastMassage.length > 27)
+                    lastMassage = lastMassage.substr(0, 25) + ' ...'
+                if (room.chatEnd.userSend === userReceive) {
+                    lastMassage = `<p id ='chat_end_${room.member[0]._id}'>${room.member[0].lastName}: ${lastMassage}  </p>`
+                } else {
+                    lastMassage = `<p id ='chat_end_${room.member[0]._id}'>Bạn: ${lastMassage}  </p>`
+                }
+            } else {
+                lastMassage = ''
+            }
+            listRoom.innerHTML += `
                             <li class="${active}">
                                 <div class="d-flex bd-highlight" onclick = 'changeRoom("${room.member[0]._id}")'>
                                     <div class="img_cont">
@@ -154,6 +159,9 @@ function showRooms(rooms) {
                                 </div>
                             </li>
         `
+        } catch (error) {
+            console.log('error show room' + error)
+        }
     })
     LoadFullNameAndAvatarRecived()
     socket.emit('Request_Server_Check_User_Onlinie', listUserInRoom)

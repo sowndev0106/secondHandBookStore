@@ -78,7 +78,6 @@ class Mecontroller {
       });
   }
   chat(req, res, next) {
-
     var user1 = req.user._id
     var user2 = req.params.userID
     if (user2) {
@@ -111,6 +110,7 @@ class Mecontroller {
 
     Room.find({ member: { $in: [user1] } }).populate({ path: 'member', match: { _id: { $ne: user1 } } }).populate('chatEnd')
       .then(async function (rooms) {
+
         if (rooms.length == 0) {
           throw 'no have room';
 
@@ -132,6 +132,7 @@ class Mecontroller {
         await Chat.updateMany({ userSend: user2, userReceive: user1 }, { status: true });
         // miss message
         rooms = rooms.map((room) => {
+          console.log(rooms)
           Chat.countDocuments({ room: room._id, status: false, userReceive: user1 })
             .then((data) => {
               room.miss = data
