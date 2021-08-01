@@ -17,15 +17,15 @@ function loadMessageWithPage(page) {
 
     axios.get('/me/getMessages/' + userReceive + '?soft=createdAt&type=desc&page=' + page)
         .then((result) => {
-            if (result.data == undefined) {
+            if (!result.data.chats) {
                 $('#chat').html(`
             <div class="text-center">
             <h3>Hiện tại bạn chưa có tin nhắn nào</h3>
             <a href="/">Nhấn vào đây để quay lại</a>
         </div>
             `)
+                console.log('loi')
                 throw 'no have room'
-
             }
             let messages = result.data.chats.docs
 
