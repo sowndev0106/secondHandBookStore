@@ -106,6 +106,7 @@ function showMessages(messages) {
 
 }
 function showRooms(rooms) {
+    console.log('Room' + rooms)
     if (rooms.length == 0)
         return
     var listRoom = document.getElementById('listRoom')
