@@ -173,8 +173,8 @@ class LoginController {
         if (req.query.q) {
             // convertText(req.query.q) : Chuyển thành chữ không dấu và viết thường
             // var search = new RegExp(convertText.englishAlphabetLowercased((req.query.q)))
-            var search = new RegExp(req.query.q.toUpperCase())
-            User.find({ $or: [{ 'lastName': search }, { 'firstName': search }] })
+            var search = new RegExp(req.query.q.toLowerCase())
+            User.find({ $or: [{ 'lastName': search }, { 'firstName': search }] }).limit(8)
                 .then(function (users) {
                     res.json(users)
                 })

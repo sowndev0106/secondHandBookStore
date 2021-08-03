@@ -159,7 +159,7 @@
 									aria-expanded="false" style="padding: 5px;">
 									{{!-- <i class="fad fa-user"> </i> --}}
 									<img id='avatar' src="{{avatar}}" alt="" style="height: 30px; border-radius: 50%;">
-									&nbsp; <b>{{lastName}}</b>
+									&nbsp; <b>{{uppercaseFirst lastName}}</b>
 								</a>
 								<form class=" dropdown-menu" aria-labelledby="dropDowUser" action="/account/logout"
 									method="POST">
@@ -521,6 +521,11 @@
 				$('.iconNotification').addClass('text-white')
 			}
 		}
-
+		function uppercaseFirst(string) {
+			if (string) {
+				return string.replace(/(^|\s)\S/g, l => l.toUpperCase())
+			}
+			return ''
+		}
 	</script>
 </header>

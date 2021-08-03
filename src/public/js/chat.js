@@ -147,7 +147,7 @@ function showRooms(rooms) {
                                     </div>
                                     <div class="user_info">
                                       <div >
-                                       <span id='fullName_receive_${room.member[0]._id}'>${room.member[0].lastName} ${room.member[0].firstName}</span>
+                                       <span id='fullName_receive_${room.member[0]._id}'>${uppercaseFirst(room.member[0].lastName)} ${uppercaseFirst(room.member[0].firstName)}</span>
                                         ${lastMassage}
                                       </div>
                                         <div>
@@ -320,7 +320,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     showResult.append(`<a class="dropdown-item d-flex align-items-center border-bottom" href="/me/chat/${user._id}">
                                     <img src="${avatar}" class="rounded-circle" style='width: 40px; margin-right: 20px;' alt=""
                                         srcset="">
-                                    <span>${user.firstName} ${user.lastName}</span>
+                                    <span> ${uppercaseFirst(user.firstName)} ${uppercaseFirst(user.lastName)}</span>
                                 </a>`)
                 })
                 if (showResult.text() == '') {

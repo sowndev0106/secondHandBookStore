@@ -103,5 +103,10 @@ module.exports = {
         } catch (error) {
             return 0
         }
+    }, uppercaseFirst: function (string) {
+        if (string) {
+            return string.replace(/(^|\s)\S/g, l => l.toUpperCase())
+        }
+        return ''
     }
 }
