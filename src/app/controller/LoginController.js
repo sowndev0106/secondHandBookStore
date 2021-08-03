@@ -168,5 +168,22 @@ class LoginController {
     google(req, res, next) {
         res.redirect('back')
     }
+    // [GET]/api/account/seach
+    searchUser(req, res, next) {
+        if (req.query.q) {
+            // convertText(req.query.q) : Chuyển thành chữ không dấu và viết thường
+            // var search = new RegExp(convertText.englishAlphabetLowercased((req.query.q)))
+            var search = new RegExp(req.query.q.toUpperCase())
+            User.find({ $or: [{ 'lastName': search }, { 'firstName': search }] })
+                .then(function (users) {
+                    res.json(users)
+                })
+                .catch(function (err) {
+                    res.status(500)
+                })
+        } else {
+            res.status(404)
+        }
+    }
 }
 module.exports = new LoginController

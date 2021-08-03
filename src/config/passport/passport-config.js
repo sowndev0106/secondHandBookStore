@@ -22,9 +22,9 @@ passport.use(new GoogleStrategy({
                 } else {
                     // neu k co thi tao moi]
                     var newUser = new User({
-                        lastName: info.given_name,
+                        lastName: info.given_name.toUpperCase(),
                         avatar: info.picture,
-                        firstName: info.family_name,
+                        firstName: info.family_name.toUpperCase(),
                         provider: profile.provider,
                         googleID: info.sub,
                         email: info.email
@@ -68,8 +68,8 @@ passport.use(new PassportFB(
                         fakebookID: info.id,
                         email: info.email,
                         provider: profile.provider,
-                        lastName: info.last_name,
-                        firstName: info.first_name
+                        lastName: info.last_name.toUpperCase(),
+                        firstName: info.first_name.toUpperCase()
                     })
                     newUser.save()
                         .then(() => {

@@ -300,6 +300,40 @@ window.addEventListener('DOMContentLoaded', (event) => {
             $('.statusTyping').hide();
         }
     })
+    $('#searchUser').on('focus', function (e) {
+        $('#resultSearchUser').html(`<div class="text-center"> <span> Nhập tên người dùng</span> </div>`)
+    })
+    // search user
+    $('#searchUser').on('keyup', function (e) {
+        let q = $('#searchUser').val()
+        let showResult = $('#resultSearchUser')
+        if (q.trim() == '') {
+            showResult.html(`<div class="text-center"> <span> Nhập tên người dùng</span> </div>`)
+            return
+        }
+        showResult.html('')
+        axios.get('/api/account/search?q=' + q)
+            .then(function (result) {
+                let users = result.data
+                users.forEach(function (user) {
+                    let avatar = user.avatar || avatarDefault
+                    showResult.append(`<a class="dropdown-item d-flex align-items-center border-bottom" href="/me/chat/${user._id}">
+                                    <img src="${avatar}" class="rounded-circle" style='width: 40px; margin-right: 20px;' alt=""
+                                        srcset="">
+                                    <span>${user.firstName} ${user.lastName}</span>
+                                </a>`)
+                })
+                if (showResult.text() == '') {
+                    showResult.append(`<div class="text-center"> <span> Không tìm thấy kết quả </span> </div>`)
+                }
+            })
+            .catch(function (err) {
+                console.log('search' + err)
+                showResult.append(`<div class="text-center"> <span> Không tìm thấy kết quả </span> </div>`)
+            })
+
+    })
+
 })
 function chatBotom() {
 

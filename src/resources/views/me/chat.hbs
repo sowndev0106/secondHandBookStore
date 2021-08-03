@@ -1,21 +1,23 @@
 <div id=''>
-    {{!-- <nav aria-label="breadcrumb">
-        <ol class="breadcrumb mb-4" style="background-color:  #6c757d42; ">
-            <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item "> <a href="/store">post</a></li>
-            <li class="breadcrumb-item " aria-current="page">detail</li>
-        </ol>
-    </nav> --}}
+
     <div class="container-fluid h-100 pt-4 pb-4" id='chat'>
 
         <div class="row justify-content-center h-100">
             <div class="col-md-4 col-xl-3 chat">
                 <div class="card mb-sm-3 mb-md-0 contacts_card">
                     <div class="card-header">
-                        <div class="input-group">
-                            <input type="text" placeholder="Search..." name="" class="form-control search">
+                        <div class="btn-group w-100">
+                            <input type="text" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                placeholder="Nhập tên... " name="" class="form-control search" id='searchUser'>
                             <div class="input-group-prepend">
                                 <span class="input-group-text search_btn"><i class="fas fa-search"></i></span>
+                            </div>
+                            <div class="dropdown-menu w-100 " id='resultSearchUser'>
+                                {{!-- <a class="dropdown-item d-flex align-items-center border-bottom" href="#">
+                                    <img src="/images/user5.png" style='width: 40px; margin-right: 20px;' alt=""
+                                        srcset="">
+                                    <span>Nguyễn Thanh Sơn</span>
+                                </a> --}}
                             </div>
                         </div>
                     </div>
