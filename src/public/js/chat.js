@@ -16,21 +16,19 @@ function loadMessageWithPage(page) {
     // if href = /me/chat => userReceive = chat
     if (userReceive == 'chat')
         userReceive = ''
-
     axios.get('/me/getMessages/' + userReceive + '?soft=createdAt&type=desc&page=' + page)
         .then((result) => {
             if (!result.data.chats) {
-                $('#chat').html(`
+                $('.type_msg').attr('disabled', 'disabled')
+                $('#msg_card_body').html(`
             <div class="text-center">
-            <h3>Hiện tại bạn chưa có tin nhắn nào</h3>
-            <a href="/">Nhấn vào đây để quay lại</a>
-        </div>
+            <h5 class="text-light">Hiện tại bạn chưa có tin nhắn nào</h5>
+            </div>
             `)
-                console.log('loi')
                 throw 'no have room'
             }
+            console.log(result.data)
             let messages = result.data.chats.docs
-
             userID = result.data.userID
             // userReceive == null => dafault first room (user)
             if (window.location.href.split('/')[window.location.href.split('/').length - 1] == 'chat' && userReceive != result.data.userReceive) {
@@ -168,9 +166,10 @@ function changeRoom(userID) {
     if (userID) {
         userReceive = userID
         window.history.pushState(undefined, 'Chat', '/me/chat/' + userReceive);
-        loadMessageWithPage(1)
         // clear chat message
         document.getElementById('msg_card_body').innerHTML = ''
+        loadMessageWithPage(1)
+
         socket.emit('location', window.location.href)
     }
 }

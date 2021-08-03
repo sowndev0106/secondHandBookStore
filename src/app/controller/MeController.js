@@ -96,6 +96,9 @@ class Mecontroller {
   }
   // [GET] /me/getMessages
   getMessages(req, res) {
+    console.log('hi')
+    console.time("answer time");
+
     var limitChat = 10
     var pagination_soption = pagination_soft_soption.paginatoin_soft(req, res, limitChat)
     var user1 = req.user._id
@@ -110,20 +113,17 @@ class Mecontroller {
 
     Room.find({ member: { $in: [user1] } }).populate({ path: 'member', match: { _id: { $ne: user1 } } }).populate('chatEnd')
       .then(async function (rooms) {
-
         if (rooms.length == 0) {
           throw 'no have room';
-
         }
         // check don't chat with myself
-        let query = {}
         if (user2 == undefined || user1 == user2) {
           // take room first default
           user2 = rooms[0].member[0]._id
         }
-        query = { member: { $all: [user1, user2] } }
-        let room = await Room.findOne(query)
-        return Promise.all([rooms, room])
+        let query = { member: { $all: [user1, user2] } }
+        console.timeLog("answer time");
+        return Promise.all([rooms, Room.findOne(query)])
       })
       // find room userMain and userSecond 
 
@@ -132,7 +132,6 @@ class Mecontroller {
         await Chat.updateMany({ userSend: user2, userReceive: user1 }, { status: true });
         // miss message
         rooms = rooms.map((room) => {
-          console.log(rooms)
           Chat.countDocuments({ room: room._id, status: false, userReceive: user1 })
             .then((data) => {
               room.miss = data
@@ -142,20 +141,18 @@ class Mecontroller {
         return Promise.all([rooms, Chat.paginate({ room: room._id }, option)])
       })
       .then(([rooms, chats]) => {
+
         res.json({
           rooms: rooms,
           chats: chats,
           userID: user1,
           userReceive: user2
         })
+        console.timeEnd("answer time");
 
         // delete notificartion
         Notification.deleteOne({ owner: user1, userSend: user2 }, function (err) {
-          if (err) {
-            console.log('xoa that bai' + err)
-          } else {
-            console.log('xoa thanh cong')
-          }
+
         })
       })
       .catch(function (err) {
