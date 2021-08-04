@@ -10,8 +10,6 @@ class LoginController {
     }
     // [POST] /Login 
     login(req, res, next) {
-
-
         if (req.user) {
             res.json({
                 status: true
@@ -77,10 +75,10 @@ class LoginController {
         // }
 
     }
-    // [POST] /register
-    showResgister(req, res, next) {
-        res.render('account/register')
-    }
+    // // [POST] /register
+    // showResgister(req, res, next) {
+    //     res.render('account/register')
+    // }
     // [POST] /signin 
     resgister(req, res, next) {
         if (!req.body.email || !req.body.password || !req.body.lastName || !req.body.firstName) {
@@ -124,12 +122,13 @@ class LoginController {
         }
         try {
 
-            User.findOne({ email: req.body.email })
+            User.findOne({ email: req.body.email, provider: 'local' })
                 .then(async function (result) {
                     if (result == null) {
-                        const salt = await bcrypt.genSalt()
-                        const hasherPassword = await bcrypt.hash(user.password, salt)
-                        user.password = hasherPassword
+                        // const salt = await bcrypt.genSalt()
+                        // const hasherPassword = await bcrypt.hash(user.password, salt)
+                        // user.password = hasherPassword
+                        user.provider = 'local'
                         user.save()
                             .then(function () {
                                 res.cookie('userID', user._id)

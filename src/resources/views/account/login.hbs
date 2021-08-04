@@ -16,8 +16,8 @@
             </div>
             <button type="submit" class="btn btn-info btn-block btn-round">Dăng
                 nhập</button>
-            <div class='text-center mt-1'>
-                <a onclick="onFormRegisterPage()" href="#">Bạn chưa có tài khoảng ? </a>
+            <div class='text-center mt-2'>
+                <a onclick="onFormRegisterPage()" href="#">Đăng kí tài khoảng ! </a>
             </div>
         </div>
         <br>
@@ -33,34 +33,32 @@
             </div>
             <form action="#" method="POST">
                 <div class="form-group">
-                    <input type="email" class="form-control" name="email" id="emailSignin"
+                    <input type="email" class="form-control" required name="emailSignin"
                         placeholder="Nhập địa chỉ Email">
                     <small class="text-danger" style="display: none;">*</small>
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-6">
-                        <input type="text" class="form-control" name="firstName" id="firstName" placeholder="Nhập họ">
+                        <input type="text" class="form-control" required name="firstName" placeholder="Nhập họ">
                         <small class="text-danger" style="display: none;">*</small>
                     </div>
                     <div class="form-group col-sm-6">
-                        <input type="email" class="form-control" name="lastName" id="lastName" placeholder="Nhập tên">
+                        <input type="email" class="form-control" required name="lastName" placeholder="Nhập tên">
                         <small class="text-danger" style="display: none;">*</small>
                     </div>
                 </div>
                 <div class="form-group">
-                    <input type="password" class="form-control" name="password" id="passSignin"
-                        placeholder="Nhập mật khẩu">
+                    <input type="password" class="form-control" required name="passSignin" placeholder="Nhập mật khẩu">
                     <small class="text-danger" style="display: none;">*</small>
                 </div>
 
-                <button type="button" class="btn btn-info btn-block btn-round" onclick="signin()">Đăng
+                <button type="button" class="btn btn-info btn-block btn-round">Đăng
                     kí</button>
             </form>
         </div>
-        <div class='text-center mb-4'>
+        <div class='text-center mb-4 mt-2'>
             <a onclick="onFormLoginPage()" href="#" class="text-primary"> Quay lại Đăng nhập</a>
         </div>
-
     </div>
     <div class="container-fluid mb-3" style="display: flex;justify-content: center;">
         <div>
@@ -92,12 +90,7 @@
 </div>
 <br> <br> <br> <br>
 {{!-- login FB --}}
-
-
-
-
 <script>
-
     function onFormRegisterPage() {
         $('#registerPage').show()
         $('#loginPage').hide()
@@ -130,30 +123,36 @@
                     $('#alertLoginPage').text('tài khoảng mật khẩu không đúng')
                 });
         });
-        function signin() {
-            var email = document.getElementById('emailSignin').value
-            var password = document.getElementById('passSignin').value
-            var lastName = document.getElementById('lastName').value
-            var firstName = document.getElementById('firstName').value
+
+        $('#registerPage button[type=button]').click(function () {
+            const email = $('#registerPage input[name="emailSignin"]').val()
+            const password = $('#registerPage input[name="passSignin"]').val()
+            const lastName = $('#registerPage input[name="lastName"]').val()
+            const firstName = $('#registerPage input[name="firstName"]').val()
+            if (!email || !password || !lastName || !firstName) {
+                $('#alertSigninPage').removeClass('d-none')
+                $('#alertSigninPage').text('bạn chưa điền đẩy đủ thông tin')
+                return
+            }
             axios.post('/account/resgister', {
-                email,
-                password,
-                lastName,
-                firstName
+                email: email,
+                password: password,
+                lastName: lastName,
+                firstName: firstName
             })
                 .then(function (res) {
+                    console.log(res.data)
                     if (res.data.status) {
                         // dang nhap thanh cong
                         location.reload();
                     } else {
-                        document.getElementById('alertSignin').style.display = 'block'
-                        document.getElementById('alertSignin').innerHTML = res.data.error
+                        $('#alertSigninPage').removeClass('d-none')
+                        $('#alertSigninPage').text(res.data.error)
                     }
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
-        }
-
+        })
     })
 </script>

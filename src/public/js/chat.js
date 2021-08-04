@@ -27,7 +27,6 @@ function loadMessageWithPage(page) {
             `)
                 throw 'no have room'
             }
-            console.log(result.data)
             let messages = result.data.chats.docs
             userID = result.data.userID
             // userReceive == null => dafault first room (user)
@@ -39,8 +38,6 @@ function loadMessageWithPage(page) {
                 socket.emit('location', window.location.href)
             }
             var rooms = result.data.rooms
-
-
             try {
                 showRooms(rooms)
             } catch (error) {
