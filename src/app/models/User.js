@@ -11,7 +11,6 @@ const User = new Schema({
     googleID: String,
     email: String,
     password: String,
-
 }, { timestamps: true })
 
 module.exports = mongoose.model('User', User)

@@ -31,7 +31,6 @@ passport.use(new GoogleStrategy({
                     })
                     newUser.save()
                         .then(() => {
-                            console.log(newUser)
                             return done(null, newUser)
                         })
                         .catch((err) => {
@@ -87,12 +86,16 @@ passport.use(new PassportFB(
 ))
 // local
 passport.use(new localStrategy(function (username, password, done) {
-    console.log(username + password)
-    User.findOne({ email: username, password: password })
-        .then((user) => {
-            if (user) {
+    User.findOne({ email: username, provider: 'local' })
+        .then(async (user) => {
+            if (!user || !user.password) {
+                return done(null, false, { massage: "Login incorrect" })
+            }
+            const resultCheck = await bcrypt.compare(password, user.password)
+            if (resultCheck) {
                 return done(null, user, { massage: "Login correct" })
-            } else {
+            }
+            else {
                 return done(null, false, { massage: "Login incorrect" })
             }
         })

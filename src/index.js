@@ -4,7 +4,7 @@ var morgan = require('morgan')
 const path = require('path')
 var exphbs = require('express-handlebars');
 var router = require('./router')
-const moment = require("moment");
+require('dotenv').config()
 const app = express()
 const methodOverride = require('method-override')
 const port = process.env.PORT || 3000
@@ -18,6 +18,7 @@ var passport = require('passport')
 var Chat = require('./app/models/Chat')
 var Room = require('./app/models/Room')
 var User = require('./app/models/User')
+
 // custom login passport
 require('..//src/config/passport/passport-config')
 var socketConfig = require('./config/socket/socket')
