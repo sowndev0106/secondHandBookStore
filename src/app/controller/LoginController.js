@@ -172,6 +172,8 @@ class LoginController {
                 return
             }
             const { user } = data
+            user.lastName = user.lastName.toLowerCase()
+            user.firstName = user.firstName.toLowerCase()
             new User(user).save()
             res.render('account/notiication', {
                 title: 'Xác thực tài khoảng thành công',
