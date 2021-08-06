@@ -8,17 +8,22 @@ var linkAvatar = document.getElementById('avatar').src
 var userID
 var timeReloadCheckUserOnline = 1000 * 60 * 3 // 3 phut 
 var listUserInRoom = {}
+var pageMessageNow = 1
 // send location now
 
 
-loadMessageWithPage(1)
+loadMessageWithPage(pageMessageNow)
+
 function loadMessageWithPage(page) {
     // if href = /me/chat => userReceive = chat
+    if (page == 0)
+        return
     if (userReceive == 'chat')
         userReceive = ''
     axios.get('/me/getMessages/' + userReceive + '?soft=createdAt&type=desc&page=' + page)
         .then((result) => {
             if (!result.data.chats) {
+                pageMessageNow = 0
                 $('.type_msg').attr('disabled', 'disabled')
                 $('#msg_card_body').html(`
             <div class="text-center">
@@ -50,9 +55,11 @@ function loadMessageWithPage(page) {
             } catch (error) {
                 console.log('load message' + error)
             }
-            chatBotom()
             // delete notification
             restartNotification()
+            if (page == 1) {
+                chatBotom()
+            }
 
         })
         .catch((e) => {
@@ -61,6 +68,10 @@ function loadMessageWithPage(page) {
 
 }
 function showMessages(messages) {
+    if (messages == undefined || messages.length == 0) {
+        pageMessageNow = 0
+        return
+    }
     var messagesBody = document.getElementById('msg_card_body')
     var content = ''
     let length = messages.length - 1
@@ -161,6 +172,8 @@ function showRooms(rooms) {
 }
 function changeRoom(userID) {
     if (userID) {
+
+        pageMessageNow = 1
         userReceive = userID
         window.history.pushState(undefined, 'Chat', '/me/chat/' + userReceive);
         // clear chat message
@@ -329,10 +342,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
             })
 
     })
+    // even load further chat message
+    $('#msg_card_body').on('scroll', function (e) {
+        let location = this.scrollTop
+        if (pageMessageNow == 0)
+            return
+        if (location == 0) {
+            loadMessageWithPage(pageMessageNow++)
+            this.scrollTop = 700
+        }
+    })
+
 
 })
 function chatBotom() {
-
     var chatHistory = document.getElementById('msg_card_body')
     chatHistory.scrollTop = chatHistory.scrollHeight;
 }
