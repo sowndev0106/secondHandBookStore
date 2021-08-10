@@ -198,11 +198,14 @@ class LoginController {
     }
     // [GET]/api/account/seach
     searchUser(req, res, next) {
+        if (!req.user) {
+            res.status(400).send('required login')
+        }
         if (req.query.q) {
             // convertText(req.query.q) : Chuyển thành chữ không dấu và viết thường
             // var search = new RegExp(convertText.englishAlphabetLowercased((req.query.q)))
             var search = new RegExp(req.query.q.toLowerCase())
-            User.find({ $or: [{ 'lastName': search }, { 'firstName': search }] }).limit(8)
+            User.find({ $or: [{ 'lastName': search }, { 'firstName': search }], "_id": { "$ne": req.user._id } }).limit(8)
                 .then(function (users) {
                     res.json(users)
                 })

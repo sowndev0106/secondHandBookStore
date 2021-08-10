@@ -356,11 +356,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
             showResult.html(`<div class="text-center"> <span> Nhập tên người dùng</span> </div>`)
             return
         }
-        showResult.html('')
+
         axios.get('/api/account/search?q=' + q)
             .then(function (result) {
                 let users = result.data
+                showResult.html('')
                 users.forEach(function (user) {
+
                     let avatar = user.avatar || avatarDefault
                     showResult.append(`<a class="dropdown-item d-flex align-items-center border-bottom" href="/me/chat/${user._id}">
                                     <img src="${avatar}" class="rounded-circle" style='width: 40px; margin-right: 20px;' alt=""
@@ -369,11 +371,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                 </a>`)
                 })
                 if (showResult.text() == '') {
+                    showResult.html('')
                     showResult.append(`<div class="text-center"> <span> Không tìm thấy kết quả </span> </div>`)
                 }
             })
             .catch(function (err) {
                 console.log('search' + err)
+                showResult.html('')
                 showResult.append(`<div class="text-center"> <span> Không tìm thấy kết quả </span> </div>`)
             })
 
