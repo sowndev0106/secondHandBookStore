@@ -13,7 +13,6 @@ var pageMessageNow = 1
 var scrollHeight = 0
 
 function loadMessageWithPage(page) {
-    console.time("answer time");
     if (userReceive == 'chat')
         userReceive = ''
     if (page == 0 || page > totalPageChat) {
@@ -83,14 +82,14 @@ function loadMessageWithPage(page) {
             // set status message
             // delete notification
             restartNotification()
-
             if (page == 1) {
+                document.getElementById('msg_card_body').scrollTop = 1
                 chatBotom()
             } else {
-
                 document.getElementById('msg_card_body').scrollTop = document.getElementById('msg_card_body').scrollHeight - scrollHeight
                 scrollHeight = document.getElementById('msg_card_body').scrollHeight
             }
+
             // set height scroll
 
         })
@@ -130,9 +129,9 @@ function loadRooms() {
                         if (lastMassage.length > 27)
                             lastMassage = lastMassage.substr(0, 25) + ' ...'
                         if (room.chatEnd.userSend === userReceive) {
-                            lastMassage = `<p id ='chat_end_${room.userReceive._id}'>${room.userReceive.lastName}: ${lastMassage}  </p>`
+                            lastMassage = `<p class ='chat_end'>${room.userReceive.lastName}: ${lastMassage}  </p>`
                         } else {
-                            lastMassage = `<p id ='chat_end_${room.userReceive._id}'>Bạn: ${lastMassage}  </p>`
+                            lastMassage = `<p class ='chat_end'>Bạn: ${lastMassage}  </p>`
                         }
                     } else {
                         lastMassage = ''
@@ -151,7 +150,7 @@ function loadRooms() {
                                         ${lastMassage}
                                       </div>
                                         <div>
-                                          <i class="bg-danger text-white miss" id='miss_message' ${checkMiss}>${miss}</i>
+                                          <i class="bg-danger text-white miss" ${checkMiss}>${miss}</i>
                                            </div>
                                     </div>
                                 </div>
@@ -201,6 +200,7 @@ function LoadFullNameAndAvatarRecived() {
 function changeUrl(userID) {
     if (userID) {
         // change url 
+        pageMessageNow = 1
         userReceive = userID
         window.history.pushState(undefined, 'Chat', '/me/chat/' + userID);
         // update url into server
@@ -235,15 +235,21 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     // change room
     $('body').on('click', '.room', function (e) {
+
         let userInRoom = this.dataset.user_receive
         if (userInRoom == userReceive)
             return
         $('.msg_card_body').html('')
-        pageMessageNow = 1
+        $(`#userReceive_${userInRoom} .miss`).text(0)
+
+        $(`#userReceive_${userInRoom} .miss`).hide()
+        statusTyping = false
         userReceive = userInRoom
+        pageMessageNow = 0 // after funtion changeUrl will set = 1 , because scoll 
         changeUrl(userInRoom)
         LoadFullNameAndAvatarRecived()
         loadMessageWithPage(1)
+
     })
 
 
@@ -308,27 +314,30 @@ window.addEventListener('DOMContentLoaded', (event) => {
     // change quanlyti miss and message end
     socket.on('miss-message-end', function (data) {
         document.title = ' (Có tin nhắn mới)'
-        let quanlyti = $('#miss_' + data.userSend).text() // userReceivers
+        let quanlyti = $(`#userReceive_${data.userSend} .miss`).text() // userReceivers
         let massage = data.message
-        let lastName = $('#fullName_receive_' + data.userSend).text()
+        let lastName = $(`#userReceive_${data.userSend} .fullName_receive`).text()
         lastName = lastName.split(" ")[lastName.split(" ").length - 1]
         if (/[0-9]+/.test(quanlyti)) {
             quanlyti = parseInt(quanlyti) + 1
-            $('#miss_' + data.userSend).text(quanlyti)
+            $(`#userReceive_${data.userSend} .miss`).text(quanlyti)
 
-            $('#miss_' + data.userSend).show()
+            $(`#userReceive_${data.userSend} .miss`).show()
             if (massage.length > 27)
                 massage = massage.substr(0, 25) + ' ...'
-            $('#chat_end_' + data.userSend).text(lastName + ': ' + data.message)
+            $(`#userReceive_${data.userSend} .chat_end`).text(lastName + ': ' + data.message)
         }
     })
     // emoji
     // typing
+    var statusTyping = false;
     $('.type_msg').keyup(() => {
         if ($('.type_msg').val() == '') {
+            statusTyping = false
             socket.emit('ReqStatusTyping', { user: userReceive, status: false })
         } else {
-            socket.emit('ReqStatusTyping', { user: userReceive, status: true })
+            if (!statusTyping)
+                socket.emit('ReqStatusTyping', { user: userReceive, status: true })
         }
     })
     // typing
@@ -338,22 +347,24 @@ window.addEventListener('DOMContentLoaded', (event) => {
     // typing
     socket.on('ResStatusTyping', function (status) {
         if (status) {
+            statusTyping = true
             $('.statusTyping').show()
         } else {
+            statusTyping = false
             $('.statusTyping').hide();
         }
     })
 
 
     $('#searchUser').on('focus', function (e) {
-        $('#resultSearchUser').html(`<div class="text-center"> <span> Nhập tên người dùng</span> </div>`)
+        $('#resultSearchUser').html(`< div class= "text-center" > <span> Nhập tên người dùng</span> </ > `)
     })
     // search user
     $('#searchUser').on('keyup', function (e) {
         let q = $('#searchUser').val()
         let showResult = $('#resultSearchUser')
         if (q.trim() == '') {
-            showResult.html(`<div class="text-center"> <span> Nhập tên người dùng</span> </div>`)
+            showResult.html(`< div class= "text-center" > <span> Nhập tên người dùng</span> </ > `)
             return
         }
 
@@ -364,27 +375,29 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 users.forEach(function (user) {
 
                     let avatar = user.avatar || avatarDefault
-                    showResult.append(`<a class="dropdown-item d-flex align-items-center border-bottom" href="/me/chat/${user._id}">
-                                    <img src="${avatar}" class="rounded-circle" style='width: 40px; margin-right: 20px;' alt=""
-                                        srcset="">
-                                    <span> ${uppercaseFirst(user.firstName)} ${uppercaseFirst(user.lastName)}</span>
-                                </a>`)
+                    showResult.append(`< a class= "dropdown-item d-flex align-items-center border-bottom" href = "/me/chat/${user._id}" >
+            <img src="${avatar}" class="rounded-circle" style='width: 40px; margin-right: 20px;' alt=""
+                srcset="">
+                <span> ${uppercaseFirst(user.firstName)} ${uppercaseFirst(user.lastName)}</span>
+                                </>`)
                 })
                 if (showResult.text() == '') {
                     showResult.html('')
-                    showResult.append(`<div class="text-center"> <span> Không tìm thấy kết quả </span> </div>`)
+                    showResult.append(`< div class= "text-center" > <span> Không tìm thấy kết quả </span> </ > `)
                 }
             })
             .catch(function (err) {
                 console.log('search' + err)
                 showResult.html('')
-                showResult.append(`<div class="text-center"> <span> Không tìm thấy kết quả </span> </div>`)
+                showResult.append(`< div class= "text-center" > <span> Không tìm thấy kết quả </span> </ > `)
             })
 
     })
     // even load further chat message
     $('#msg_card_body').on('scroll', function (e) {
         let location = this.scrollTop
+        if ($('#msg_card_body').html() == '')
+            return
         if (pageMessageNow == 0 || pageMessageNow > totalPageChat) {
             $('.loadingChat').hide()
             return

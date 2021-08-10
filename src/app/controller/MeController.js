@@ -110,7 +110,7 @@ class Mecontroller {
       res.status(417)
       return
     }
-    var room = await Room.findOne({ owner: userMain, userReceive: userReceive })
+    var room = await Room.findOneAndUpdate({ owner: userMain, userReceive: userReceive }, { missMessage: 0 })
     if (!room) {
       console.log('k tim thay uer')
       res.status(400).send('user no constants')
