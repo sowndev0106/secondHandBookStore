@@ -59,6 +59,8 @@ module.exports = function (io) {
         })
         // receive message from client
         socket.on('Send-massage', (data) => {
+            if (!data)
+                return
             let chat = new Chat()
             chat.status = false  //defautlt false chua xem
             // format time message
@@ -122,10 +124,17 @@ module.exports = function (io) {
                     })
             }
             //save database
-            Room.findOneAndUpdate({ member: { $all: [data.userReceive, socket.userID] } }, { chatEnd: chat._id }, { new: true })
+            let missMessage = chat.status ? '0' : '1'
+            Room.findOneAndUpdate({ owner: data.userReceive, userReceive: socket.userID }, { chatEnd: chat._id, $inc: { missMessage: missMessage } }, { new: true })
                 .then((room) => {
-                    chat.userReceive = data.userReceive
-                    chat.userSend = socket.userID
+                    if (!room) {
+                        room = new Room({ owner: data.userReceive, userReceive: socket.userID, chatEnd: chat._id, missMessage: missMessage })
+                        room.save()
+                    }
+                    chat.member.push(socket.userID)
+                    chat.member.push(data.userReceive)
+                    chat.roomReceive = room._id
+                    chat.roomSend = data.roomID
                     chat.message = data.message
                     chat.room = room._id
                     return chat

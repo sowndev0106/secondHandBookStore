@@ -1,91 +1,62 @@
 'use strict'
 
 
+
+
+// send location now
+
 var userReceive = window.location.href.split('/')[window.location.href.split('/').length - 1]
 var time = (new Date()).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
 var avatarDefault = '/images/user5.png'
 var linkAvatar = document.getElementById('avatar').src
-var userID
 var timeReloadCheckUserOnline = 1000 * 60 * 3 // 3 phut 
 var listUserInRoom = {}
+var totalPageChat = 1
+var roomID = ''
 var pageMessageNow = 1
-// send location now
-
-
-loadMessageWithPage(pageMessageNow)
+var scrollHeight = 0
 
 function loadMessageWithPage(page) {
-    // if href = /me/chat => userReceive = chat
-    if (page == 0)
-        return
+    console.time("answer time");
+
     if (userReceive == 'chat')
         userReceive = ''
-    axios.get('/me/getMessages/' + userReceive + '?soft=createdAt&type=desc&page=' + page)
-        .then((result) => {
-            if (!result.data.chats) {
-                pageMessageNow = 0
-                $('.type_msg').attr('disabled', 'disabled')
-                $('#msg_card_body').html(`
-            <div class="text-center">
-            <h5 class="text-light">Hiện tại bạn chưa có tin nhắn nào</h5>
-            </div>
-            `)
-                throw 'no have room'
-            }
-            let messages = result.data.chats.docs
-            userID = result.data.userID
-            // userReceive == null => dafault first room (user)
-            if (window.location.href.split('/')[window.location.href.split('/').length - 1] == 'chat' && userReceive != result.data.userReceive) {
-                userReceive = result.data.userReceive
-                // change url 
-                window.history.pushState(undefined, 'Chat', '/me/chat/' + userReceive);
-                // update url into server
-                socket.emit('location', window.location.href)
-            }
-            var rooms = result.data.rooms
-            try {
-                showRooms(rooms)
-            } catch (error) {
-                console.log('load room' + error)
-            }
-            try {
-                if (messages) {
-                    showMessages(messages)
-                }
-            } catch (error) {
-                console.log('load message' + error)
-            }
-            // delete notification
-            restartNotification()
-            if (page == 1) {
-                chatBotom()
-            }
-
-        })
-        .catch((e) => {
-            console.log('Chat load' + e)
-        })
-
-}
-function showMessages(messages) {
-    if (messages == undefined || messages.length == 0) {
-        pageMessageNow = 0
+    if (page == 0 || page > totalPageChat)
         return
-    }
-    var messagesBody = document.getElementById('msg_card_body')
-    var content = ''
-    let length = messages.length - 1
-    for (var i = length; i >= 0; i--) {
-        var message = messages[i]
-        var checkUser = userID == message.userSend
-        let status = message.status ? '<i class="far fa-check-double"></i>' : '<i class="far fa-check"></i>'
-        if (checkUser) {
-            // send (me)
-            content += `
-                        <div class="d-flex justify-content-end mb-4">
+
+    fetch('/api/me/getmessages/' + userReceive + '?soft=createdAt&type=desc&page=' + page)
+        .then(response => response.json())
+        .then(data => {
+            totalPageChat = data.chats.totalPages
+            let chats = data.chats.docs
+            console.table(chats)
+            if (chats.length == 0) {
+                if (page == 1) {
+                    pageMessageNow = 0
+                    $('.type_msg').attr('disabled', 'disabled')
+                    $('#msg_card_body').html(`
+                <div class="text-center">
+                <h5 class="text-light">Hiện tại bạn chưa có tin nhắn nào</h5>
+                </div>
+                `)
+                }
+                throw 'no have chat'
+            }
+            let messagesBody = $('.msg_card_body')
+            let content = ''
+            let avatarReceive = $(`#userReceive_${userReceive} .user_img`).attr('src')
+
+            for (let i = chats.length - 1; i >= 0; i--) {
+                let chat = chats[i]
+                let checkUser = roomID == chat.roomSend
+                let status = chat.status ? '<i class="far fa-check-double"></i>' : '<i class="far fa-check"></i>' // seen or no seen 
+                if (checkUser) {
+                    // send (me)
+                    content += `
+                        <div class="d-flex justify-content-end mb-3">
                             <div class="msg_cotainer_send">
-                               ${message.message}
-                                <span class="msg_time_send">${formatTime(message.createdAt)}
+                               ${chat.message}
+                                <span class="msg_time_send">${formatTime(chat.createdAt)}
                   ${status}
                                 </span>
                             </div>
@@ -93,125 +64,182 @@ function showMessages(messages) {
                                 <img src="${linkAvatar}" class="rounded-circle user_img_msg">
                             </div>
                         </div>
-    `} else {
-            // receive
-            content += `
-                 <div class="d-flex justify-content-start mb-4">
+    `
+                } else {
+                    // receive
+                    content += `  
+                 <div class="d-flex justify-content-start mb-3">
                             <div class="img_cont_msg">
-                                <img src="${document.getElementById('avatar_receive_' + userReceive).src}"
+                                <img src="${avatarReceive}"
                                     class="rounded-circle user_img_msg">
                             </div>
                             <div class="msg_cotainer">
-                                ${message.message}
-                                <span class="msg_time"> ${formatTime(message.createdAt)} </span>
+                                ${chat.message}
+                                <span class="msg_time"> ${formatTime(chat.createdAt)} </span>
                             </div>
-                        </div>
-            `
-        }
-    }
-    messagesBody.innerHTML = content + messagesBody.innerHTML
-    // set status message
-
-}
-function showRooms(rooms) {
-
-    if (rooms.length == 0)
-        return
-    var listRoom = document.getElementById('listRoom')
-    listRoom.innerHTML = ''
-    rooms.forEach((room) => {
-        try {
-            // check onlinew ; if true online : offline
-            listUserInRoom[room.member[0]._id] = false
-            let avatar = room.member[0].avatar == undefined ? avatarDefault : room.member[0].avatar
-            let active = room.member[0]._id == userReceive ? 'active' : ''
-            let miss = room.miss || 0
-            let checkMiss
-            if (miss == 0) {
-                checkMiss = 'style="display: none"'
-            }
-            let lastMassage
-            if (room.chatEnd) {
-                lastMassage = room.chatEnd.message
-                if (lastMassage.length > 27)
-                    lastMassage = lastMassage.substr(0, 25) + ' ...'
-                if (room.chatEnd.userSend === userReceive) {
-                    lastMassage = `<p id ='chat_end_${room.member[0]._id}'>${room.member[0].lastName}: ${lastMassage}  </p>`
-                } else {
-                    lastMassage = `<p id ='chat_end_${room.member[0]._id}'>Bạn: ${lastMassage}  </p>`
+                        </div>>
+                    
+                    `
                 }
-            } else {
-                lastMassage = ''
             }
-            listRoom.innerHTML += `
-                            <li class="${active}">
-                                <div class="d-flex bd-highlight" onclick = 'changeRoom("${room.member[0]._id}")'>
+            messagesBody.prepend(content)
+            // set status message
+            // delete notification
+            restartNotification()
+            if (page == 1) {
+                chatBotom()
+            } else {
+                document.getElementById('msg_card_body').scrollTop = document.getElementById('msg_card_body').scrollHeight - scrollHeight
+                scrollHeight = document.getElementById('msg_card_body').scrollHeight
+            }
+            // set height scroll
+
+        })
+        // if href = /me/chat => userReceive = chat
+        .catch((e) => {
+            console.log('Chat load ERROR: ' + e)
+        })
+}
+function loadRooms() {
+    var listRoom = $('#listRoom')
+    fetch('/api/me/getrooms')
+        .then(response => response.json())
+        .then(data => {
+            let rooms = data.rooms
+            if (rooms.length == 0) {
+                alert('Bạn chưa có Nhắn tin với ai')
+                return
+            }
+            for (const room of rooms) {
+
+                try {
+                    // check onlinew ; if true online : offline
+                    listUserInRoom[room.userReceive._id] = false
+
+                    let avatar = room.userReceive.avatar == undefined ? avatarDefault : room.userReceive.avatar
+                    let active = room.userReceive._id == userReceive ? 'active' : '' // *
+                    let miss = room.missMessage || 0
+                    let checkMiss = ''
+                    if (miss == 0) {
+                        checkMiss = 'style="display: none"'
+                    }
+
+                    let lastMassage
+                    if (room.chatEnd) {
+                        lastMassage = room.chatEnd.message
+                        if (lastMassage.length > 27)
+                            lastMassage = lastMassage.substr(0, 25) + ' ...'
+                        if (room.chatEnd.userSend === userReceive) {
+                            lastMassage = `<p id ='chat_end_${room.userReceive._id}'>${room.userReceive.lastName}: ${lastMassage}  </p>`
+                        } else {
+                            lastMassage = `<p id ='chat_end_${room.userReceive._id}'>Bạn: ${lastMassage}  </p>`
+                        }
+                    } else {
+                        lastMassage = ''
+                    }
+                    listRoom.append(`
+                            <li class="${active} room" id='userReceive_${room.userReceive._id}' data-user_receive="${room.userReceive._id}" data-room_id="${room._id}">
+                                <div class="d-flex bd-highlight">
                                     <div class="img_cont">
-                                        <img src="${avatar}" id='avatar_receive_${room.member[0]._id}'
-                                            class="rounded-circle user_img">
-                                        <span class=" online_icon status_Receive_${room.member[0]._id}" ></span>
+                                        <img src="${avatar}" 
+                                            class="rounded-circle user_img ">
+                                        <span class="online_icon" ></span>
                                     </div>
                                     <div class="user_info">
                                       <div >
-                                       <span id='fullName_receive_${room.member[0]._id}'>${uppercaseFirst(room.member[0].lastName)} ${uppercaseFirst(room.member[0].firstName)}</span>
+                                       <span class='fullName_receive'>${uppercaseFirst(room.userReceive.lastName)} ${uppercaseFirst(room.userReceive.firstName)}</span>
                                         ${lastMassage}
                                       </div>
                                         <div>
-                                          <i class="bg-danger text-white miss" id='miss_${room.member[0]._id}' ${checkMiss}>${miss}</i>
+                                          <i class="bg-danger text-white miss" id='miss_message' ${checkMiss}>${miss}</i>
                                            </div>
                                     </div>
                                 </div>
                             </li>
-        `
-        } catch (error) {
-            console.log('error show room' + error)
-        }
-    })
-    LoadFullNameAndAvatarRecived()
-    socket.emit('Request_Server_Check_User_Onlinie', listUserInRoom)
+        `)
+                } catch (error) {
+                    console.log('error show room' + error)
+                }
+            }
+            return rooms
+        })
+        .then(function (rooms) {
+            // check url constants userReceive // userReceive == rooms[0].owner <=> chat myself
+            if (window.location.href.split('/')[window.location.href.split('/').length - 1] == 'chat' || userReceive == rooms[0].owner) {
+                changeUrl(rooms[0].userReceive._id)
+            }
+            socket.emit('Request_Server_Check_User_Onlinie', listUserInRoom)
+            loadMessageWithPage(pageMessageNow)
+            LoadFullNameAndAvatarRecived()
+        })
+        .catch((err) => {
+            console.log(err)
+        })
 }
-function changeRoom(userID) {
-    if (userID) {
 
-        pageMessageNow = 1
-        userReceive = userID
-        window.history.pushState(undefined, 'Chat', '/me/chat/' + userReceive);
-        // clear chat message
-        document.getElementById('msg_card_body').innerHTML = ''
-        loadMessageWithPage(1)
-
-        socket.emit('location', window.location.href)
-    }
-}
 function LoadFullNameAndAvatarRecived() {
-    var avatarReceive = $('#avatar_receive_' + userReceive).attr('src')
-    var fullName = $('#fullName_receive_' + userReceive).text()
-    $('#status_Receive_Main').addClass(`status_Receive_${userReceive}`)
+
+    roomID = $(`#userReceive_${userReceive}`).data('room_id')
+    $('.room').removeClass('active')
+    $(`#userReceive_${userReceive}`).addClass('active')
+    var avatarReceive = $(`#userReceive_${userReceive} .user_img `).attr('src')
+    var fullName = $(`#userReceive_${userReceive} .fullName_receive`).text()
+    var status = $(`#userReceive_${userReceive} .online_icon`).hasClass('offline')
+    if (!status) {
+        $('#status_Receive_Main').removeClass(`offline`)
+    } else {
+        $('#status_Receive_Main').addClass(`offline`)
+    }
     $('#avatar_receive_main').attr('src', avatarReceive)
     $('#fullName_receive_main').text(fullName)
 }
 
 
+
+function changeUrl(userID) {
+    if (userID) {
+        // change url 
+        userReceive = userID
+        window.history.pushState(undefined, 'Chat', '/me/chat/' + userID);
+        // update url into server
+        socket.emit('location', window.location.href)
+    }
+}
+
+// request server return list user online in room 
+// Each 5 minute
+
+setTimeout(RequestServerCheckUserOnlinie, timeReloadCheckUserOnline);
+function RequestServerCheckUserOnlinie() {
+    socket.emit('Request_Server_Check_User_Onlinie', listUserInRoom)
+    setTimeout(RequestServerCheckUserOnlinie, timeReloadCheckUserOnline); // repeat myself
+}
+// result return user online in room 
+socket.on('result_User_Onlinie_each_Room', (data) => {
+    for (let user in data) {
+        if (!data[user]) {
+            $(`.status_Receive_${user}`).addClass('offline')
+        } else {
+            $(`.status_Receive_${user}`).removeClass('offline')
+        }
+    }
+})
+
 window.addEventListener('DOMContentLoaded', (event) => {
+    loadRooms()
     var linkAvatarMain = $('#avatar').attr('src')
 
-    // request server return list user online in room 
-    // Each 5 minute
-
-    setTimeout(RequestServerCheckUserOnlinie, timeReloadCheckUserOnline);
-    function RequestServerCheckUserOnlinie() {
-        socket.emit('Request_Server_Check_User_Onlinie', listUserInRoom)
-        setTimeout(RequestServerCheckUserOnlinie, timeReloadCheckUserOnline); // repeat myself
-    }
-    // result return user online in room 
-    socket.on('result_User_Onlinie_each_Room', (data) => {
-        for (let user in data) {
-            if (!data[user]) {
-                $(`.status_Receive_${user}`).addClass('offline')
-            } else {
-                $(`.status_Receive_${user}`).removeClass('offline')
-            }
-        }
+    // change room
+    $('body').on('click', '.room', function (e) {
+        let userInRoom = this.dataset.user_receive
+        if (userInRoom == userReceive)
+            return
+        $('.msg_card_body').html('')
+        pageMessageNow = 1
+        userReceive = userInRoom
+        changeUrl(userInRoom)
+        LoadFullNameAndAvatarRecived()
+        loadMessageWithPage(1)
     })
 
 
@@ -225,7 +253,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         // send masage into server
 
         socket.emit('Send-massage', {
-            userReceive, message
+            userReceive, roomID, message
         })
         $('.type_msg').val('')
 
@@ -256,10 +284,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     // receive message from server
     socket.on('receive-massage', (data) => {
+        let avatarReceive = $(`#userReceive_${userReceive} .user_img`).attr('src')
+
         $('.msg_card_body').append(`
           <div class="d-flex justify-content-start mb-4">
                             <div class="img_cont_msg">
-                                <img src="${document.getElementById('avatar_receive_' + userReceive).src}"
+                                <img src="${avatarReceive}"
                                     class="rounded-circle user_img_msg">
                             </div> 
                             <div class="msg_cotainer">
@@ -309,6 +339,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             $('.statusTyping').hide();
         }
     })
+
+
     $('#searchUser').on('focus', function (e) {
         $('#resultSearchUser').html(`<div class="text-center"> <span> Nhập tên người dùng</span> </div>`)
     })
@@ -345,19 +377,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
     // even load further chat message
     $('#msg_card_body').on('scroll', function (e) {
         let location = this.scrollTop
-        if (pageMessageNow == 0)
+        if (pageMessageNow == 0 || pageMessageNow > totalPageChat)
             return
         if (location == 0) {
-            loadMessageWithPage(pageMessageNow++)
-            this.scrollTop = 700
+            scrollHeight = document.getElementById('msg_card_body').scrollHeight
+            pageMessageNow++
+            loadMessageWithPage(pageMessageNow)
         }
+
     })
-
-
 })
 function chatBotom() {
     var chatHistory = document.getElementById('msg_card_body')
-    chatHistory.scrollTop = chatHistory.scrollHeight;
+    chatHistory.scrollTop = chatHistory.scrollHeight
+    scrollHeight = chatHistory.scrollHeight
 }
 var formatTime = (time) => {
     moment.locale("vi");

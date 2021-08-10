@@ -77,119 +77,78 @@ class Mecontroller {
         res.redirect("back");
       });
   }
-  chat(req, res, next) {
-    var user1 = req.user._id
-    var user2 = req.params.userID
-    if (user2) {
-      // check have room // find or create
-      Room.findOne({ member: { $all: [user1, user2] } }, function (err, data) {
-        if (!data) {
-          var room = new Room()
-          room.member.push(user1)
-          room.member.push(user2)
-          room.save()
-        }
-      })
-    }
+  async chat(req, res, next) {
     res.render('me/chat')
-
+    var userMain = req.user._id
+    var userReceive = req.params.userID
+    if (userReceive && userReceive != userMain) {
+      var room = await Room.findOne({ owner: userMain, userReceive: userReceive })
+      if (!room) {
+        room = new Room({ owner: userMain, userReceive: userReceive })
+        room.save()
+      }
+      // res.render('me/chat', { room: room })
+      return
+    }
   }
   // [GET] /me/getMessages
-  getMessages(req, res) {
-    console.log('hi')
-    console.time("answer time");
-
+  async getMessages(req, res) {
+    if (!req.user) {
+      res.status(400).send('login required')
+      return
+    }
     var limitChat = 10
     var pagination_soption = pagination_soft_soption.paginatoin_soft(req, res, limitChat)
-    var user1 = req.user._id
-    var user2 = req.params.userID
+    var userMain = req.user._id
+    var userReceive = req.params.userID
     var option = pagination_soption.option
     option.populate = ([{
       path: 'User',
       populate: 'userSend'
     }]);
-    // var room = new Room()
-    // room.member = [user1, user2]
-    Room.find({ member: { $in: [user1] } }).populate({ path: 'member', match: { _id: { $ne: user1 } } }).populate('chatEnd')
-      .then(function (rooms) {
-        if (rooms.length == 0) {
-          throw 'no have room';
-        }
-        // check don't chat with myself
-        if (user2 == undefined || user1 == user2) {
-          // take room first default
-          user2 = rooms[0].member[0]._id
-        }
-        console.timeLog("answer time");
-        //, Room.findOne({ member: { $all: [user1, user2] } })
-        return Promise.all([rooms])
+    if (userReceive == undefined || userMain == userReceive) {
+      res.status(417)
+      return
+    }
+    var room = await Room.findOne({ owner: userMain, userReceive: userReceive })
+    if (!room) {
+      console.log('k tim thay uer')
+      res.status(400).send('user no constants')
+      return
+    }
+    Chat.paginate({ $or: [{ 'roomReceive': room._id }, { 'roomSend': room._id }] }, option)
+      .then(function (chats) {
+        res.json({
+          chats: chats,
+          userID: userMain,
+          userReceive: userReceive
+        })
+
+        Chat.updateMany({ $or: [{ roomReceive: room._id }, { roomSend: room._id }], member: userReceive }, { status: true })
+          .then()
+        // delete notificartion
+        Notification.deleteOne({ owner: userMain, userSend: userReceive }, function (err) { })
       })
       // find room userMain and userSecond 
-      .then(([rooms]) => {
-        let roomMainID
-        // change all chat of room now  => seen
-        // miss message
-        console.timeLog("answer time");
-        rooms = rooms.map((room) => {
-          if (room.member[0] == undefined) {
-            return room
-          }
-          if (room.member[0]._id == user2) {
-            roomMainID = room._id
-            return room
-          }
-          Chat.countDocuments({ room: room._id, status: false, userReceive: user1 })
-            .then((data) => {
-              console.log(data)
-              room.miss = data
-            })
-          return room
-        })
-        return Promise.all([rooms, Chat.paginate({ room: roomMainID }, option)])
-      })
-      .then(([rooms, chats]) => {
-        res.json({
-          rooms: rooms,
-          chats: chats,
-          userID: user1,
-          userReceive: user2
-        })
-        Chat.updateMany({ userSend: user2, userReceive: user1 }, { status: true });
-
-        console.timeEnd("answer time");
-
-        // delete notificartion
-        Notification.deleteOne({ owner: user1, userSend: user2 }, function (err) {
-
-        })
-      })
       .catch(function (err) {
         console.log(err)
-        res.json({})
+        res.status(500)
       })
-
   }
   // [GET] /me/getroom
-  getroom(req, res) {
+  getRooms(req, res) {
     console.time("answer time");
     if (!req.user) {
       res.status(404).send('Chua dang nhap')
       return
     }
-    var user1 = req.user._id
-    Room.find({ member: { $in: [user1] } }).sort({ 'updatedAt': 'desc' }).populate({ path: 'member', match: { _id: { $ne: user1 } } }).populate('chatEnd')
-      .then(async function (rooms) {
+    var userMain = req.user._id
+    Room.find({ owner: userMain }).sort({ 'updatedAt': 'desc' }).populate('userReceive').populate('chatEnd')
+      .then(function (rooms) {
         if (rooms.length == 0) {
-          throw 'no have room';
+          res.status(204).send('user have\'t room')
+          return
         }
-        for (let i = 0; i < rooms.length; i++) {
-          await Chat.countDocuments({ room: rooms[i]._id, status: false, userReceive: user1 }, function (err, data) {
-            rooms[i].miss = data
-          })
-        }
-        return Promise.resolve(rooms)
-      })
-      .then((rooms) => {
         res.json({
           rooms
         })

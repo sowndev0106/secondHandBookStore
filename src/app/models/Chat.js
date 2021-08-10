@@ -4,9 +4,9 @@ const mongoosePaginate = require('mongoose-paginate-v2')
 const Schema = mongoose.Schema
 
 const Chat = new Schema({
-    userSend: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    userReceive: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    room: { type: Schema.Types.ObjectId, ref: 'Room', required: true },
+    member: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }],
+    roomReceive: { type: Schema.Types.ObjectId, ref: 'Room', required: true },
+    roomSend: { type: Schema.Types.ObjectId, ref: 'Room', required: true },
     message: String,
     status: { type: Boolean, default: false }
 }, { timestamps: true })
