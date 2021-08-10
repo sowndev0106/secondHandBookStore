@@ -1,8 +1,4 @@
 'use strict'
-
-
-
-
 // send location now
 
 var userReceive = window.location.href.split('/')[window.location.href.split('/').length - 1]
@@ -18,18 +14,18 @@ var scrollHeight = 0
 
 function loadMessageWithPage(page) {
     console.time("answer time");
-
     if (userReceive == 'chat')
         userReceive = ''
-    if (page == 0 || page > totalPageChat)
+    if (page == 0 || page > totalPageChat) {
+        $('.loadingChat').hide()
         return
-
+    }
     fetch('/api/me/getmessages/' + userReceive + '?soft=createdAt&type=desc&page=' + page)
         .then(response => response.json())
         .then(data => {
+            $('.loadingChat').hide()
             totalPageChat = data.chats.totalPages
             let chats = data.chats.docs
-            console.table(chats)
             if (chats.length == 0) {
                 if (page == 1) {
                     pageMessageNow = 0
@@ -42,6 +38,7 @@ function loadMessageWithPage(page) {
                 }
                 throw 'no have chat'
             }
+
             let messagesBody = $('.msg_card_body')
             let content = ''
             let avatarReceive = $(`#userReceive_${userReceive} .user_img`).attr('src')
@@ -77,7 +74,7 @@ function loadMessageWithPage(page) {
                                 ${chat.message}
                                 <span class="msg_time"> ${formatTime(chat.createdAt)} </span>
                             </div>
-                        </div>>
+                        </div>
                     
                     `
                 }
@@ -86,9 +83,11 @@ function loadMessageWithPage(page) {
             // set status message
             // delete notification
             restartNotification()
+
             if (page == 1) {
                 chatBotom()
             } else {
+
                 document.getElementById('msg_card_body').scrollTop = document.getElementById('msg_card_body').scrollHeight - scrollHeight
                 scrollHeight = document.getElementById('msg_card_body').scrollHeight
             }
@@ -97,6 +96,7 @@ function loadMessageWithPage(page) {
         })
         // if href = /me/chat => userReceive = chat
         .catch((e) => {
+            $('.loadingChat').hide()
             console.log('Chat load ERROR: ' + e)
         })
 }
@@ -164,10 +164,12 @@ function loadRooms() {
             return rooms
         })
         .then(function (rooms) {
+
             // check url constants userReceive // userReceive == rooms[0].owner <=> chat myself
             if (window.location.href.split('/')[window.location.href.split('/').length - 1] == 'chat' || userReceive == rooms[0].owner) {
                 changeUrl(rooms[0].userReceive._id)
             }
+            RequestServerCheckUserOnlinie()
             socket.emit('Request_Server_Check_User_Onlinie', listUserInRoom)
             loadMessageWithPage(pageMessageNow)
             LoadFullNameAndAvatarRecived()
@@ -216,13 +218,15 @@ function RequestServerCheckUserOnlinie() {
 }
 // result return user online in room 
 socket.on('result_User_Onlinie_each_Room', (data) => {
+
     for (let user in data) {
         if (!data[user]) {
-            $(`.status_Receive_${user}`).addClass('offline')
+            $(`#userReceive_${user} .online_icon`).addClass('offline')
         } else {
-            $(`.status_Receive_${user}`).removeClass('offline')
+            $(`#userReceive_${user} .online_icon`).removeClass('offline')
         }
     }
+    LoadFullNameAndAvatarRecived()
 })
 
 window.addEventListener('DOMContentLoaded', (event) => {
@@ -377,9 +381,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
     // even load further chat message
     $('#msg_card_body').on('scroll', function (e) {
         let location = this.scrollTop
-        if (pageMessageNow == 0 || pageMessageNow > totalPageChat)
+        if (pageMessageNow == 0 || pageMessageNow > totalPageChat) {
+            $('.loadingChat').hide()
             return
+        }
         if (location == 0) {
+            $('.loadingChat').show()
             scrollHeight = document.getElementById('msg_card_body').scrollHeight
             pageMessageNow++
             loadMessageWithPage(pageMessageNow)
