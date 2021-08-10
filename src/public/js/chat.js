@@ -33,7 +33,7 @@ function loadMessageWithPage(page) {
             if (chats.length == 0) {
                 if (page == 1) {
                     pageMessageNow = 0
-                    $('.type_msg').attr('disabled', 'disabled')
+                    // $('.type_msg').attr('disabled', 'disabled')
                     $('#msg_card_body').html(`
                 <div class="text-center">
                 <h5 class="text-light">Hiện tại bạn chưa có tin nhắn nào</h5>
