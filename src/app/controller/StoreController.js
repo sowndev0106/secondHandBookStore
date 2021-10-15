@@ -86,6 +86,8 @@ class StoreController {
     searchComplete(req, res, next) {
         // convertText(req.query.q) : Chuyển thành chữ không dấu và viết thường
         var search = new RegExp(convertText.englishAlphabetLowercased((req.query.q)))
+
+        // var search = new RegExp(`(?i)${req.query.q}`)
         Post.
             aggregate(
                 [{ "$match": { englishAlphabetLowercased: search } },
@@ -96,7 +98,6 @@ class StoreController {
                 console.log(posts)
                 res.json(posts)
             })
-
     }
 }
 module.exports = new StoreController

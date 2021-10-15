@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 async function connect() {
 
-    const uri = "mongodb+srv://nguyenthanhson162001:Son162001@secondhandbooks.nxpjh.mongodb.net/SecondHandBooksOnline?retryWrites=true&w=majority";
+    const uri = "mongodb+srv://son:162001@cluster0.vch9y.mongodb.net/secondhandbooks?retryWrites=true&w=majority";
     try {
         await mongoose.connect(uri, {
             useNewUrlParser: true,
@@ -12,8 +12,7 @@ async function connect() {
         console.log("connect DB successfully")
     } catch (error) {
         console.log(uri)
-        console.log("connect DB failed ne " + error)
+        console.log("connect DB failed  " + error)
     }
-
 }
 module.exports = { connect }

@@ -19,5 +19,5 @@ router.get('/google', passport.authenticate('google', { scope: ['profile', 'emai
 router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/account/login', successRedirect: 'back' }), loginController.google)
 
 router.post('/logout', loginController.logout)
-//  xu ly login
+    //  xu ly login
 module.exports = router

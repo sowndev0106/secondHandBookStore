@@ -1,0 +1,109 @@
+[{
+  "_id": 
+ "60dd65fd323e3203c024b3d8",
+  "name": "Công nghệ thông tin",
+  "slug": "cong-nghe-thong-tin",
+  "__v": 0
+},{
+  "_id": 
+ "60dd65fd323e3203c024b3d9",
+  "name": "Khoa học cơ bản",
+  "slug": "khoa-hoc-co-ban",
+  "__v": 0
+},{
+  "_id": 
+ "60dd6643b0cdd20d702a0533",
+  "name": "Quản trị kinh doanh",
+  "slug": "quan-tri-kinh-doanh",
+  "__v": 0
+},{
+  "_id": 
+ "60dd6643b0cdd20d702a0534",
+  "name": "Tài chính ngân hàng",
+  "slug": "tai-chinh-ngan-hang",
+  "__v": 0
+},{
+  "_id": 
+ "60deb4d62a75202318ecabcb",
+  "name": "Lý luận Chính trị",
+  "slug": "ly-luan-chinh-tri",
+  "__v": 0
+},{
+  "_id": 
+ "60deb4d62a75202318ecabcc",
+  "name": "Luật",
+  "slug": "luat",
+  "__v": 0
+},{
+  "_id": 
+ "60deb4d62a75202318ecabcd",
+  "name": "Ngoại ngữ",
+  "slug": "ngoai-ngu",
+  "__v": 0
+},{
+  "_id": 
+ "60deb4d62a75202318ecabce",
+  "name": "Kế toán - Kiểm toán",
+  "slug": "ke-toan-kiem-toan",
+  "__v": 0
+},{
+  "_id": 
+ "60deb4d62a75202318ecabcf",
+  "name": "Thương mại - Du lịch",
+  "slug": "thuong-mai-du-lich",
+  "__v": 0
+},{
+  "_id": 
+ "60deb4d62a75202318ecabd0",
+  "name": "Công nghệ Hóa học",
+  "slug": "cong-nghe-hoa-hoc",
+  "__v": 0
+},{
+  "_id": 
+ "60deb4d62a75202318ecabd1",
+  "name": "Kỹ thuật Xây dựng",
+  "slug": "ky-thuat-xay-dung",
+  "__v": 0
+},{
+  "_id": 
+ "60deb4d62a75202318ecabd2",
+  "name": "Công nghệ điện",
+  "slug": "cong-nghe-dien",
+  "__v": 0
+},{
+  "_id": 
+ "60deb4d62a75202318ecabd3",
+  "name": "Công nghệ điện tử",
+  "slug": "cong-nghe-dien-tu",
+  "__v": 0
+},{
+  "_id": 
+ "60deb4d62a75202318ecabd4",
+  "name": "Công nghệ Động lực",
+  "slug": "cong-nghe-dong-luc",
+  "__v": 0
+},{
+  "_id": 
+ "60deb4d62a75202318ecabd5",
+  "name": "Công nghệ Nhiệt - Lạnh",
+  "slug": "cong-nghe-nhiet-lanh",
+  "__v": 0
+},{
+  "_id": 
+ "60deb4d62a75202318ecabd6",
+  "name": "Công nghệ may - Thời trang",
+  "slug": "cong-nghe-may-thoi-trang",
+  "__v": 0
+},{
+  "_id": 
+ "60deb4d62a75202318ecabd7",
+  "name": "Công nghệ Cơ khí",
+  "slug": "cong-nghe-co-khi",
+  "__v": 0
+},{
+  "_id": 
+ "60e3de26c94479104e56e475",
+  "name": "Khác",
+  "slug": "oder",
+  "__v": 0
+}]

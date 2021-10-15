@@ -73,7 +73,8 @@
                             <input type="checkbox" value="{{this._id}}" name="checkItems" id="checkItemt{{@index}}" />
                         </td>
                         <td id='id_{{this._id}}'>{{addOne 1 @index}}</td>
-                        <td><img src="{{this.images}}" alt="" style="height: 60px;" /></td>
+                        <td><img src="http://localhost:3000/post/getimage/{{this.images}}" alt=""
+                                style="height: 60px;" /></td>
                         <td id='name_{{this._id}}'>{{this.name}}</td>
                         <td>{{this.price}}</td>
                         <td>{{this.quantity}}</td>

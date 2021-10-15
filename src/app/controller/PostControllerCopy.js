@@ -8,8 +8,6 @@ const fs = require("fs");
 const { exception } = require("console");
 const convertText = require('..//..//util/convertText')
 const { deleteFile, deleteFiles, getFileStream } = require("..//..//config/aws/s3")
-const upload = require("..//..//util/multer/multer")
-const cloudinary = require("..//..//util/cloudinary/cloudinary")
 const maxPrice = 500000;
 const minPrice = 0;
 const maxQuantity = 999;
@@ -62,27 +60,20 @@ class PostController {
             res.render("post/createPost");
         }
         // [POST] /post/store
-    async store(req, res, next) {
+    store(req, res, next) {
             //   = 10MB
             var post = new Post(req.body);
-            // console.log("Path file " + image1[0].path);
-            // console.log("Detail file " + image1[0]);
-            // res.send(result)
-
             post.owner = req.user._id;
 
             const { image1, image2, image3 } = req.files
             if (image1) {
-                let result = await cloudinary.addFile(image1[0].path)
-                post.images.push(result.secure_url);
+                post.images.push(image1[0].key);
             }
             if (image2) {
-                let result = await cloudinary.addFile(image2[0].path)
-                post.images.push(result.secure_url);
+                post.images.push(image2[0].key);
             }
             if (image3) {
-                let result = await cloudinary.addFile(image3[0].path)
-                post.images.push(result.secure_url);
+                post.images.push(image3[0].key)
             }
             if (post.images.length == 0) {
                 renderError("Thêm không thành công", "File ảnh của bạn có vấn đề gì đó");
@@ -128,7 +119,7 @@ class PostController {
             }
 
             function deleteImages() {
-                // deleteFiles([image1, image2, image3])
+                deleteFiles([image1, image2, image3])
             }
         }
         // [GET] post/edit:postID
